@@ -1,0 +1,53 @@
+{
+  "name": "Mojo HelpDesk Extension by Collective Bias",
+  "version": "2.1",
+  "manifest_version": 2,
+  "description": "Unofficial extension for Mojo HelpDesk that adds additional functionallity for tickets received in Gmail.",
+  "homepage_url": "http://collectivebias.com",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "options_page": "src/options/options.html",
+  "background": {
+    "page": "src/bg/background.html",
+    "persistent": true
+  },
+  "web_accessible_resources": ["src/options/options.html"],
+  "permissions": [
+    "storage",
+    "https://mail.google.com/*",
+    "https://mail.collectivebias.com/*",
+    "https://mysupport.mojohelpdesk.com/*",
+    "https://*.mojohelpdesk.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*",
+        "https://mail.collectivebias.com/*",
+        "https://*.mojohelpdesk.com/*"
+      ],
+      "css": [
+        "js/jquery-ui/jquery-ui-fixed.css",
+        "src/inject/inject.css"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "https://mail.google.com/*",
+        "https://mail.collectivebias.com/*",
+        "https://*.mojohelpdesk.com/*"
+      ],
+      "js": [
+        "js/jquery/jquery.js",
+        "js/jquery-ui/jquery-ui.min.js",
+        "js/jquery.dialogextend/jquery.dialogextend.min.js",
+        "src/inject/inject.js"
+      ]
+    }
+  ]
+}

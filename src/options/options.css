@@ -1,0 +1,19 @@
+.dependent_on_domain {
+    display: none;
+}
+.help_tags {
+
+}
+.help_tags * {
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+.help_tags a {
+    display: block;
+    height: 20px;
+}
+.help_tags img {
+	margin-top: 10px;
+    max-width: 600px;
+}
