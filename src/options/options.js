@@ -1,35 +1,6 @@
 function CB_Mojo_Extension_Options() {
     var cb_options = this; //for function confusion
-    this.default_custom_fields_object = { 
-"custom_field_sub_category":{ 
-"dependent_to":"ticket_type_id",
-"field_type":"select",
-"options":{ 
-"66168":{ 
-"enhancement request/feedback":"Enhancement Request/feedback",
-"issue":"Issue",
-"how to/training issue":"How To/training Issue",
-"user error":"User Error"
-},
-"66169":{ 
-"application issue or failure":"Application Issue or Failure",
-"hardware issue or failure":"Hardware Issue or Failure",
-"network issue or failure":"Network Issue or Failure"
-},
-"66170":{ 
-"bug":"Bug",
-"known error":"Known Error",
-"duplicate":"Duplicate"
-},
-"66171":{ 
-"account/identity management task":"Account/identity Management Task",
-"enhancement task ":"Enhancement Task",
-"support/training task":"Support/training Task"
-}
-},
-"pretty_name":"Sub Category"
-}
-};
+    this.default_custom_fields_object = {"custom_field_sub_category":{"dependent_to":"ticket_type_id","field_type":"select","options":{"66168":{"enhancement request/feedback":"Enhancement Request/feedback","how to/training issue":"How To/training Issue","issue":"Issue","user error":"User Error"},"66169":{"application issue or failure":"Application Issue or Failure","hardware issue or failure":"Hardware Issue or Failure","network issue or failure":"Network Issue or Failure"},"66170":{"bug":"Bug","duplicate":"Duplicate","known error":"Known Error"},"66171":{"account/identity management task":"Account/identity Management Task","enhancement task":"Enhancement Task","enhancement task ":"Enhancement Task","support/training task":"Support/training Task"}},"pretty_name":"Sub Category"}};
     // Saves options to chrome.storage
     this.save_options = function() {
         var $reset_options = $('#reset_options').is(':checked');
