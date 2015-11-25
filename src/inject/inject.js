@@ -52,86 +52,86 @@ function CB_Mojo_Extension() {
         if (cb_mojo_ext.debug_mode == true) {
             console.log(items);
         }
-        if (document.URL.indexOf(cb_mojo_ext.mojo_domain) > -1 && document.URL.indexOf("ma/#/tickets/") > -1) {
-            cb_mojo_ext.is_modal = true
-            setTimeout(function(e) {
-                cb_mojo_ext.ticket_id = window.location.href.split("/").slice(-1)[0].split("?").slice(0)[0];
-                //alert(jQuery(".ticket-side-options a").length);
-                //var $type_read_field = jQuery(".ng-binding:contains('Type')").closest('div').nextAll('div').first().find('span.ng-binding').first();
-                jQuery("#ticket-form-info table tr").on("click", function() {
-                    cb_mojo_ext.create_form();
-                    cb_mojo_ext.get_queues();
-                });
-                //var current_question_type = $.trim($type_read_field.text()).toLowerCase();
-                //alert(current_question_type);
-                jQuery('a[ng-click="onEditAssigneeQueueType()"]').on("click", function() {
-                    setTimeout(function() {
-                        jQuery('a[ng-click="onSaveAssigneeQueueType()"]').on("click", function() {
+        // set up an observer for the title element
+        //If you wanted to get more serious you could look at this https://github.com/kartiktalwar/gmail.js
+        cb_mojo_ext.target = document.querySelector('head > title');
+        cb_mojo_ext.observer = new window.WebKitMutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (document.URL.indexOf(cb_mojo_ext.mojo_domain) > -1 && document.URL.indexOf("ma/#/tickets/") > -1) {
+                    cb_mojo_ext.is_modal = true
+                    setTimeout(function(e) {
+                        cb_mojo_ext.ticket_id = window.location.href.split("/").slice(-1)[0].split("?").slice(0)[0];
+                        //alert(jQuery(".ticket-side-options a").length);
+                        //var $type_read_field = jQuery(".ng-binding:contains('Type')").closest('div').nextAll('div').first().find('span.ng-binding').first();
+                        jQuery("#ticket-form-info table tr").on("click", function() {
                             cb_mojo_ext.create_form();
                             cb_mojo_ext.get_queues();
                         });
-                    }, 1000)
-                });
-                jQuery(".ticket-side-options a").on("click", function() {
-                    $btn = jQuery(this);
-                    //setTimeout(function(e) {
-                    $subcategory_field = $btn.closest("#ticket-form-info").find("label:contains('Sub Category')").nextAll('input').first();
-                    $subcategory_field.prop('disabled', true);
-                    $subcategory_field_change = jQuery("<button>Change Sub Category</button>");
-                    $subcategory_field_change.on("click", function() {
-                        cb_mojo_ext.create_form();
-                        cb_mojo_ext.get_queues();
-                    });
-                    $subcategory_field_change.insertAfter($subcategory_field);
-                    //console.log(cb_mojo_ext.custom_fields_json["custom_field_sub_category"]["options"]);
-                    //jQuery(cb_mojo_ext.create_select("custom_field_sub_category", cb_mojo_ext.custom_fields_json["custom_field_sub_category"]["options"], $subcategory_field.val(), "Please Select Sub Category", true, "type")).insertAfter($subcategory_field);
-                    /*jQuery('[data-dependent-to]').on("dependent_change", function() {
-                        $this = $(this);
-                        $dependent_to = cb_mojo_ext.$update_form.find("#" + $this.data("dependent-to"));
-                        $this.find('option').remove();
-                        var dependent_options = JSON.parse($this.attr('data-dependent-options'));
-                        if (cb_mojo_ext.debug_mode == true) {
-                            console.log(dependent_options[$dependent_to.val()]);
-                        }
-                        $this.append(cb_mojo_ext.create_options(dependent_options[$dependent_to.val()], $this.attr("title"), $this.data("orig-value")));
-                    }).trigger("dependent_change");*/
-                    //}, 1000);
-                });
-            }, 1000);
-            /*setInterval(function(){
-                
-            },3000);*/
-        } else {
-            // set up an observer for the title element
-            //If you wanted to get more serious you could look at this https://github.com/kartiktalwar/gmail.js
-            cb_mojo_ext.target = document.querySelector('head > title');
-            cb_mojo_ext.observer = new window.WebKitMutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
+                        //var current_question_type = $.trim($type_read_field.text()).toLowerCase();
+                        //alert(current_question_type);
+                        jQuery('a[ng-click="onEditAssigneeQueueType()"]').on("click", function() {
+                            setTimeout(function() {
+                                jQuery('a[ng-click="onSaveAssigneeQueueType()"]').on("click", function() {
+                                    cb_mojo_ext.create_form();
+                                    cb_mojo_ext.get_queues();
+                                });
+                            }, 1000)
+                        });
+                        jQuery(".ticket-side-options a").on("click", function() {
+                            $btn = jQuery(this);
+                            //setTimeout(function(e) {
+                            $subcategory_field = $btn.closest("#ticket-form-info").find("label:contains('Sub Category')").nextAll('input').first();
+                            $subcategory_field.prop('disabled', true);
+                            $subcategory_field_change = jQuery("<button>Change Sub Category</button>");
+                            $subcategory_field_change.on("click", function() {
+                                cb_mojo_ext.create_form();
+                                cb_mojo_ext.get_queues();
+                            });
+                            $subcategory_field_change.insertAfter($subcategory_field);
+                            //console.log(cb_mojo_ext.custom_fields_json["custom_field_sub_category"]["options"]);
+                            //jQuery(cb_mojo_ext.create_select("custom_field_sub_category", cb_mojo_ext.custom_fields_json["custom_field_sub_category"]["options"], $subcategory_field.val(), "Please Select Sub Category", true, "type")).insertAfter($subcategory_field);
+                            /*jQuery('[data-dependent-to]').on("dependent_change", function() {
+                                $this = $(this);
+                                $dependent_to = cb_mojo_ext.$update_form.find("#" + $this.data("dependent-to"));
+                                $this.find('option').remove();
+                                var dependent_options = JSON.parse($this.attr('data-dependent-options'));
+                                if (cb_mojo_ext.debug_mode == true) {
+                                    console.log(dependent_options[$dependent_to.val()]);
+                                }
+                                $this.append(cb_mojo_ext.create_options(dependent_options[$dependent_to.val()], $this.attr("title"), $this.data("orig-value")));
+                            }).trigger("dependent_change");*/
+                            //}, 1000);
+                        });
+                    }, 1000);
+                    /*setInterval(function(){
+                        
+                    },3000);*/
+                } else {
                     var title = mutation.target.textContent;
                     cb_mojo_ext.title_selector = items.title_selector;
                     if (title.indexOf(cb_mojo_ext.title_selector) > 0 && title.indexOf("(#") > 0) {
+                        cb_mojo_ext.ticket_id = title.substring(title.indexOf("(#") + 2, title.lastIndexOf(")")).trim();
                         cb_mojo_ext.create_form(false);
-                        if (cb_mojo_ext.access_key) {
-                            cb_mojo_ext.ticket_id = title.substring(title.indexOf("(#") + 2, title.lastIndexOf(")")).trim();
-                            cb_mojo_ext.get_queues();
-                        } else {
-                            cb_mojo_ext.$update_form.trigger("message", ["error", "Missing API Key <br/>" + cb_mojo_ext.option_page_url]);
-                        }
+                        cb_mojo_ext.get_queues();
                     } else {
                         if (cb_mojo_ext.$update_form != null) {
                             cb_mojo_ext.$update_form.remove();
                         }
                     }
-                });
+                }
             });
-            cb_mojo_ext.observer.observe(cb_mojo_ext.target, {
-                subtree: true,
-                characterData: true,
-                childList: true
-            });
-        }
+        });
+        cb_mojo_ext.observer.observe(cb_mojo_ext.target, {
+            subtree: true,
+            characterData: true,
+            childList: true
+        });
     });
     cb_mojo_ext.get_queues = function() {
+        if (!cb_mojo_ext.access_key) {  
+            cb_mojo_ext.$update_form.trigger("message", ["error", "Missing API Key <br/>" + cb_mojo_ext.option_page_url]);
+            return;
+        }
         $.ajax({
             url: "https://mysupport.mojohelpdesk.com/api/ticket_queues.json?access_key=" + cb_mojo_ext.access_key,
             // The name of the callback parameter, as specified by the YQL service
