@@ -330,6 +330,7 @@ function CB_Mojo_Extension() {
                         var $el = $this.find('option[value=""]');
                         $this.find('option[value=""]').remove();
                         $this.find('option:eq(0)').before($el);
+                        $this.val(assigned_to_id);
                     });
                 }
             },
@@ -382,6 +383,7 @@ function CB_Mojo_Extension() {
         if (is_custom == true) {
             custom_class = cb_mojo_ext.custom_class;
         }
+
         var dependent_options = "";
         if (typeof(dependent_to) != "undefined") {
             dependent_to = "data-dependent-to='" + dependent_to + "' data-dependent-options=\'" + JSON.stringify(options).replace(/'/g, "\\'") + "'";
