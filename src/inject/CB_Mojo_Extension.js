@@ -90,14 +90,10 @@ function CB_Mojo_Extension() {
             if (!$.isNumeric(cb_mojo_ext.ticket_id)) {
                 return;
             }
-            //alert(jQuery(".ticket-side-options a").length);
-            //var $type_read_field = jQuery(".ng-binding:contains('Type')").closest('div').nextAll('div').first().find('span.ng-binding').first();
             jQuery("#ticket-form-info table tr").on("click", function() {
                 cb_mojo_ext.create_form();
                 cb_mojo_ext.get_queues();
             });
-            //var current_question_type = $.trim($type_read_field.text()).toLowerCase();
-            //alert(current_question_type);
             jQuery('a[ng-click="onEditAssigneeQueueType()"]').on("click", function() {
                 setTimeout(function() {
                     jQuery('a[ng-click="onSaveAssigneeQueueType()"]').on("click", function() {
@@ -108,7 +104,6 @@ function CB_Mojo_Extension() {
             });
             jQuery(".ticket-side-options a").on("click", function() {
                 $btn = jQuery(this);
-                //setTimeout(function(e) {
                 $subcategory_field = $btn.closest("#ticket-form-info").find("label:contains('Sub Category')").nextAll('input').first();
                 $subcategory_field.prop('disabled', true);
                 $subcategory_field_change = jQuery("<button>Change Sub Category</button>");
@@ -117,23 +112,7 @@ function CB_Mojo_Extension() {
                     cb_mojo_ext.get_queues();
                 });
                 $subcategory_field_change.insertAfter($subcategory_field);
-                //console.log(cb_mojo_ext.custom_fields_json["custom_field_sub_category"]["options"]);
-                //jQuery(cb_mojo_ext.create_select("custom_field_sub_category", cb_mojo_ext.custom_fields_json["custom_field_sub_category"]["options"], $subcategory_field.val(), "Please Select Sub Category", true, "type")).insertAfter($subcategory_field);
-                /*jQuery('[data-dependent-to]').on("dependent_change", function() {
-                    $this = $(this);
-                    $dependent_to = cb_mojo_ext.$update_form.find("#" + $this.data("dependent-to"));
-                    $this.find('option').remove();
-                    var dependent_options = JSON.parse($this.attr('data-dependent-options'));
-                    if (cb_mojo_ext.debug_mode == true) {
-                        console.log(dependent_options[$dependent_to.val()]);
-                    }
-                    $this.append(cb_mojo_ext.create_options(dependent_options[$dependent_to.val()], $this.attr("title"), $this.data("orig-value")));
-                }).trigger("dependent_change");*/
-                //}, 1000);
             });
-            /*setInterval(function(){
-                
-            },3000);*/
         }, 1000);
     };
     cb_mojo_ext.get_queues = function() {
@@ -171,7 +150,6 @@ function CB_Mojo_Extension() {
         if (cb_mojo_ext.access_key != "" && cb_mojo_ext.email_address != "") {
             $.ajax({
                 url: "https://mysupport.mojohelpdesk.com/api/users/get_by_email.json?email=" + cb_mojo_ext.email_address + "&access_key=" + cb_mojo_ext.access_key,
-                // The name of the callback parameter, as specified by the YQL service
                 jsonp: "callback",
                 dataType: "json",
                 success: function(response) {
@@ -204,7 +182,6 @@ function CB_Mojo_Extension() {
             var $this = $(this);
             XMLData = XMLData + "<" + $this.attr("id") + ">" + $(this).val() + "</" + $this.attr("id") + ">";
         });
-        //XMLData = XMLData + "<custom_field_sub_category>" + cb_mojo_ext.$update_form.find("#custom_field_sub_category").val() + "</custom_field_sub_category>";
         XMLData = XMLData + "</ticket>";
         console.log(XMLData);
         if (cb_mojo_ext.debug_mode == true) {
@@ -324,7 +301,7 @@ function CB_Mojo_Extension() {
                     cb_mojo_ext.$update_form.find('#assign_to_me').click(function(e) {
                         e.preventDefault();
                         $assignee_select.val(cb_mojo_ext.mojo_agent_id);
-                        $assignee_select.change.trigger("change");
+                        $assignee_select.trigger("change");
                     });
 
                     function byTextCaseInsensitive(a, b) {
@@ -421,6 +398,10 @@ function CB_Mojo_Extension() {
         html = html + '<div class="ui-widget success_msg" style="display:none;"><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"><p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
         html = html + '<div class="ui-widget error_msg" style="display:none;"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
         html = html + "<div class='content'></div>";
+        if (!cb_mojo_ext.is_modal) {
+             html = html + "<textarea></textarea>";
+             html = html + "<button>Private Message</button>";
+        }
         html = html + "</div>";
         if (cb_mojo_ext.is_modal) {
             $("body").append(html);
@@ -450,7 +431,7 @@ function CB_Mojo_Extension() {
             cb_mojo_ext.$update_form.addClass("draggable");
             var dialog_options = {
                 title: "Mojo Update",
-                create: function() { ///// CREATE FUNCTION TO ADD CUSTOM BUTTON
+                create: function() {
                     $(this).prev('.ui-dialog-titlebar').find('.ui-dialog-title').after("<img src='" + chrome.extension.getURL("icons/icon19.png") + "'>");
                 },
                 draggable: true,
