@@ -3,34 +3,47 @@
  **/
 
 /** This is the wrapper box that the drag and drop box is not allowed to pass outside of this box.**/
-
-/** style for draggable content **/
-
-.draggable {
-    font-size: 14px;
-    /*display:table-cell;
-	text-align:center;
-	vertical-align:middle;
-	font-size:12px;
-	font-weight:bold;
-	top:100px;
-	right:10px;
-	width:300px;
-	height:150px;
-	position: absolute;
-	z-index: 999999;*/
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,800,800italic);
+#cb_mojo_display{
+	font-family: 'Open Sans', sans-serif;
 }
-.draggable select {
+/** Directed At Modal Mode **/
+#cb_mojo_display.draggable {
+    font-size: 14px;
+}
+#cb_mojo_display.draggable select {
 	width: 175px;
 }
-.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+#cb_mojo_display.draggable .ui-widget input, #cb_mojo_display.draggable .ui-widget select, #cb_mojo_display.draggable .ui-widget textarea, #cb_mojo_display.draggable .ui-widget button {
     font-size: .75em;
 }
+/** Directed At Sidebar Mode **/
+#cb_mojo_display.sbar {
+	width: 100%;
+	font-size: 12px;
+}
+#cb_mojo_display.sbar select{
+	width: 150px;
+	text-overflow: ellipsis;
+}
+#cb_mojo_display.sbar .title{
+	padding-top: 10px;
+	font-size: 20px;
+	font-weight: bold;
+	display: block;
+	width: 100%;
+	height: 40px;
+}
+#cb_mojo_display.sbar .title img{
+	position: absolute;
+	right: 5px;
+}
+/** Directed At All Modes **/
 #cb_mojo_update_ticket {
     width: 100%;
 }
 #assign_to_me, #open_ticket {
-    width: 100%;
+    width: 95%;
     font-size: 10px;
     text-align: center;
     float: left;

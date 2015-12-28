@@ -12,7 +12,7 @@
                     <h1>Welcome to The Mojo HelpDesk Extension by Collective Bias</h1>
                 </td>
                 <td>
-                    <img src="icon128.png">
+                    <img src="../../icons/icon128.png">
                 </td>
             </tr>
             <tr>
@@ -69,7 +69,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" class='help_tags'>
+                <td colspan="2" class='help_tags dependent_on_domain'>
                     <a href="#">How Do I Set Up The Email Title?</a>
                     <div>
                         You need to add (#{{ticket.id}}) somewhere in the title of ALL the email messages as well as something unique. See below for an example.
@@ -87,13 +87,13 @@
                     <input type="checkbox" id="use_custom_fields" >
                 </td>
             </tr>
-            <tr id='custom_fields_json_container' class='dependent_on_domain'>
-                <td>
+            <tr class='dependent_on_domain'>
+                <td class='custom_fields_json_container' >
                     <label>
                         Custom Fields JSON
                     </label>
                 </td>
-                <td>
+                <td class='custom_fields_json_container'>
                     <textarea id="custom_fields_json" style="width:100%;min-height:200px"></textarea>
                 </td>
             </tr>

@@ -58,9 +58,9 @@ function CB_Mojo_Extension_Options() {
     }
     this.use_custom_fields_change = function() {
         if ($('#use_custom_fields').is(':checked') == true) {
-            $('#custom_fields_json_container').show();
+            $('.custom_fields_json_container').show();
         } else {
-            $('#custom_fields_json_container').hide();
+            $('.custom_fields_json_container').hide();
         }
     }
     // Restores select box and checkbox state using the preferences

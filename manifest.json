@@ -11,7 +11,7 @@
   },
   "default_locale": "en",
   "options_page": "src/options/options.html",
-  "web_accessible_resources": ["src/options/options.html"],
+  "web_accessible_resources": ["src/options/options.html","icons/icon19.png"],
   "permissions": [
     "storage",
     "https://mail.google.com/*",
@@ -42,6 +42,7 @@
         "js/jquery/jquery.js",
         "js/jquery-ui/jquery-ui.min.js",
         "js/jquery.dialogextend/jquery.dialogextend.min.js",
+        "src/inject/CB_Mojo_Extension.js",
         "src/inject/inject.js"
       ]
     }
