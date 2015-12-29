@@ -2,52 +2,100 @@
  * Place your custom CSS styles here.
  **/
 
+
 /** This is the wrapper box that the drag and drop box is not allowed to pass outside of this box.**/
+
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,800,800italic);
-#cb_mojo_display{
-	font-family: 'Open Sans', sans-serif;
+#cb_mojo_display {
+    font-family: 'Open Sans', sans-serif;
+    height: 450px;
+    overflow: hidden;
+}
+#cb_mojo_display ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 10px;
+}
+#cb_mojo_display ::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+#cb_mojo_display .ticket_info, #cb_mojo_display .ticket_private_message, #cb_mojo_display  .ticket_messages {
+	display: none;
 }
 /** Directed At Modal Mode **/
+
 #cb_mojo_display.draggable {
     font-size: 14px;
 }
+
 #cb_mojo_display.draggable select {
-	width: 175px;
+    width: 175px;
 }
+
 #cb_mojo_display.draggable .ui-widget input, #cb_mojo_display.draggable .ui-widget select, #cb_mojo_display.draggable .ui-widget textarea, #cb_mojo_display.draggable .ui-widget button {
     font-size: .75em;
 }
+
+
 /** Directed At Sidebar Mode **/
+
 #cb_mojo_display.sbar {
+    width: 100%;
+    font-size: 12px;
+}
+
+#cb_mojo_display.sbar select {
+    width: 150px;
+    text-overflow: ellipsis;
+}
+
+#cb_mojo_display.sbar .title {
+    padding-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    height: 40px;
+}
+
+#cb_mojo_display.sbar .title img {
+    position: absolute;
+    right: 5px;
+}
+
+#cb_mojo_display.sbar .scrollbox {
+    margin: 0em;
+    border: 1px solid #ccc;
+    width: 220px;
+    height: 100px;
+    overflow: hidden;
+    overflow-y:scroll;
+}
+
+.user_info {
+	height: 30px;
 	width: 100%;
-	font-size: 12px;
-}
-#cb_mojo_display.sbar select{
-	width: 150px;
-	text-overflow: ellipsis;
-}
-#cb_mojo_display.sbar .title{
-	padding-top: 10px;
-	font-size: 20px;
-	font-weight: bold;
 	display: block;
-	width: 100%;
-	height: 40px;
+	background-position: right;
+	line-height: 30px;
+	background-size: 30px 30px;
+    background-repeat: no-repeat;
 }
-#cb_mojo_display.sbar .title img{
-	position: absolute;
-	right: 5px;
-}
+
 /** Directed At All Modes **/
+
 #cb_mojo_update_ticket {
     width: 100%;
 }
+
 #assign_to_me, #open_ticket {
     width: 95%;
     font-size: 10px;
     text-align: center;
     float: left;
 }
+
 #open_ticket {
     font-size: 12px;
 }

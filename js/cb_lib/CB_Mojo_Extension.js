@@ -115,6 +115,43 @@ function CB_Mojo_Extension() {
             });
         }, 1000);
     };
+    cb_mojo_ext.get_user = function(user_id) {
+        if (!cb_mojo_ext.access_key) {
+            cb_mojo_ext.$update_form.trigger("message", ["error", "Missing API Key <br/>" + cb_mojo_ext.option_page_url]);
+            return;
+        }
+        $.ajax({
+            url: "https://mysupport.mojohelpdesk.com/api/users/" + user_id + ".json?access_key=" + cb_mojo_ext.access_key,
+            // The name of the callback parameter, as specified by the YQL service
+            jsonp: "callback",
+            // Tell jQuery we're expecting JSONP
+            dataType: "json",
+            success: function(response) {},
+            error: function(response) {
+                //if (cb_mojo_ext.debug_mode == true) {
+                console.log(response);
+                //}
+            }
+        });
+    };
+    cb_mojo_ext.clean_message_body = function(msg) {
+        var new_msg = msg;
+        new_msg = new_msg.replace("--My Issue-- Description:", "");
+        new_msg = new_msg.replace("Original Message:", "");
+        if (new_msg.indexOf("Disclaimer The information contained") > -1) {
+            new_msg = new_msg.substring(0, new_msg.indexOf("Disclaimer The information contained"));
+        }
+        if (new_msg.indexOf("\n\n\n") > -1) {
+            new_msg = new_msg.substring(0, new_msg.indexOf("\n\n\n"));
+        }
+        if (new_msg.indexOf("collectivebias.mojohelpdesk.com") > -1) {
+            new_msg = new_msg.substring(0, new_msg.indexOf("collectivebias.mojohelpdesk.com") - 34);
+        }
+        if (new_msg.indexOf("@collectivebias") > -1) {
+            new_msg = new_msg.substring(0, new_msg.indexOf("@collectivebias") - 40);
+        }
+        return new_msg;
+    }
     cb_mojo_ext.get_queues = function() {
         if (!cb_mojo_ext.access_key) {
             cb_mojo_ext.$update_form.trigger("message", ["error", "Missing API Key <br/>" + cb_mojo_ext.option_page_url]);
@@ -206,6 +243,9 @@ function CB_Mojo_Extension() {
             }
         });
     };
+    cb_mojo_ext.isEmpty = function(str) {
+        return (!str || 0 === str.length);
+    };
     cb_mojo_ext.convert_object = function(mojo_object) {
         if (cb_mojo_ext.debug_mode == true) {
             console.log(mojo_object);
@@ -220,7 +260,7 @@ function CB_Mojo_Extension() {
         return return_obj;
     };
     cb_mojo_ext.get_ticket = function() {
-        cb_mojo_ext.$update_form.find(".content").html("Loading Ticket #" + cb_mojo_ext.ticket_id + "<br/> Please Wait...");
+        cb_mojo_ext.$update_form.find(".ticket_content").html("Loading Ticket #" + cb_mojo_ext.ticket_id + "<br/> Please Wait...");
         $.ajax({
             url: "https://mysupport.mojohelpdesk.com/api/tickets/" + cb_mojo_ext.ticket_id + ".json?access_key=" + cb_mojo_ext.access_key,
             // The name of the callback parameter, as specified by the YQL service
@@ -241,9 +281,13 @@ function CB_Mojo_Extension() {
                     var ticket_type_id = ticket.ticket_type.id;
                     var assigned_to_id = ticket.assigned_to_id;
                     var queue = related_data.queue;
+                    var messages = ticket.all_comments;
+                    var submitter_full_name = related_data.user.full_name;
+                    var submitter_picture_url = related_data.user.picture_url;
                     var ticket_queue_id = queue.id;
                     var ticket_queue_name = queue.name;
                     var ticket_type_id = ticket.ticket_type.id;
+                    var ticket_description = ticket.description;
                     var potential_assignees = ticket.potential_assignees;
                     potential_assignees_fixed = cb_mojo_ext.convert_object(potential_assignees);
                     var ticket_link = "";
@@ -265,10 +309,26 @@ function CB_Mojo_Extension() {
                     }
                     html = html + "</table>";
                     html = html + "<button id='" + cb_mojo_ext.update_button_id + "' data-ticket_id='" + ticket_id + "' class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Update Ticket</button>";
+                    html = html + "<h4 data-cat='ticket_info'>Ticket Information</h4>";
+                    html = html + "<div class='ticket_info user_info' style='background-image:url(" + submitter_picture_url + ")'>Submitted By " + submitter_full_name + "</div>";
+                    html = html + "<div class='ticket_info scrollbox'>" + cb_mojo_ext.clean_message_body(ticket_description) + "</div>";
+                    if (!cb_mojo_ext.is_modal) {
+                        html = html + "<h4 data-cat='ticket_messages'>Messages</h4>";
+                        html = html + "<div class='scrollbox ticket_messages'><ul>";
+                        $.each(messages, function(k, v) {
+                            if (!cb_mojo_ext.isEmpty(v.body)) {
+                                html = html + "<li>" + cb_mojo_ext.clean_message_body(v.body) + "</li>";
+                            }
+                        });
+                        html = html + "</ul></div>";
+                        html = html + "<h4 data-cat='ticket_private_message'>Send Private Message</h4>";
+                        html = html + "<textarea class='ticket_private_message'></textarea>";
+                        html = html + "<button class='ticket_private_message'>Send</button>";
+                    }
                     if (cb_mojo_ext.debug_mode == true) {
                         console.log(ticket.related_data.queue.name);
                     }
-                    cb_mojo_ext.$update_form.find(".content").html(html);
+                    cb_mojo_ext.$update_form.find(".ticket_content").html(html);
                     $("#" + cb_mojo_ext.update_button_id).click(cb_mojo_ext.send_form);
                     cb_mojo_ext.$update_form.find('[data-dependent-to]').on("dependent_change", function() {
                         $this = $(this);
@@ -317,6 +377,10 @@ function CB_Mojo_Extension() {
                         $this.find('option[value=""]').remove();
                         $this.find('option:eq(0)').before($el);
                         $this.val(assigned_to_id);
+                    });
+                    jQuery("[data-cat]").on("click", function(e) {
+                        $this = jQuery(this);
+                        jQuery("." + $this.data("cat")).toggle();
                     });
                 }
             },
@@ -391,17 +455,13 @@ function CB_Mojo_Extension() {
         return options_html;
     };
     cb_mojo_ext.create_form = function() {
-        var html = "<div id='" + cb_mojo_ext.popup_id + "'>";
+        var html = "<div id='" + cb_mojo_ext.popup_id + "' class='scrollbox'>";
         if (!cb_mojo_ext.is_modal) {
             html = html + "<div class='title'>Mojo Update <img src='" + chrome.extension.getURL("icons/icon19.png") + "'></div>";
         }
         html = html + '<div class="ui-widget success_msg" style="display:none;"><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"><p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
         html = html + '<div class="ui-widget error_msg" style="display:none;"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
-        html = html + "<div class='content'></div>";
-        if (!cb_mojo_ext.is_modal) {
-             html = html + "<textarea></textarea>";
-             html = html + "<button>Private Message</button>";
-        }
+        html = html + "<div class='ticket_content'></div>";
         html = html + "</div>";
         if (cb_mojo_ext.is_modal) {
             $("body").append(html);
