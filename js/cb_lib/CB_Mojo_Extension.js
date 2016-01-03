@@ -11,6 +11,8 @@ function CB_Mojo_Extension() {
     cb_mojo_ext.email_address = "";
     cb_mojo_ext.mojo_agent_id = "";
     cb_mojo_ext.optionsUrl = chrome.extension.getURL("src/options/options.html");
+    cb_mojo_ext.automated_avatar_url = chrome.extension.getURL("icons/optimus.gif");
+    cb_mojo_ext.default_user_avatar_url = chrome.extension.getURL("icons/default_user.png");
     cb_mojo_ext.$update_form = null;
     cb_mojo_ext.popup_id = "cb_mojo_display";
     cb_mojo_ext.title_selector = "";
@@ -49,6 +51,7 @@ function CB_Mojo_Extension() {
         cb_mojo_ext.mojo_agent_id = items.mojo_agent_id;
         cb_mojo_ext.custom_fields_json = items.custom_fields_json;
         cb_mojo_ext.use_custom_fields = items.use_custom_fields;
+        cb_mojo_ext.baseURI = null;
         if (cb_mojo_ext.debug_mode == true) {
             console.log(items);
         }
@@ -57,15 +60,25 @@ function CB_Mojo_Extension() {
         cb_mojo_ext.target = document.querySelector('head > title');
         cb_mojo_ext.observer = new window.WebKitMutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
+                if (cb_mojo_ext.baseURI == mutation.target.baseURI) {
+                    return;
+                }
+                cb_mojo_ext.baseURI = mutation.target.baseURI;
+                console.log(mutation);
                 if (document.URL.indexOf(cb_mojo_ext.mojo_domain) > -1 && document.URL.indexOf("ma/#/tickets/") > -1) {
-                    cb_mojo_ext.enhance_mojo_ui();
+                    cb_mojo_ext.is_modal = true
+                    var ticket_id = window.location.href.split("/").slice(-1)[0].split("?").slice(0)[0];
+                    cb_mojo_ext.ticket_id = ticket_id;
+                    cb_mojo_ext.enhance_mojo_ui(cb_mojo_ext);
                 } else {
                     var title = mutation.target.textContent;
                     cb_mojo_ext.title_selector = items.title_selector;
                     if (title.indexOf(cb_mojo_ext.title_selector) > 0 && title.indexOf("(#") > 0) {
-                        cb_mojo_ext.ticket_id = title.substring(title.indexOf("(#") + 2, title.lastIndexOf(")")).trim();
-                        cb_mojo_ext.create_form(false);
-                        cb_mojo_ext.get_queues();
+                        var ticket_id = title.substring(title.indexOf("(#") + 2, title.lastIndexOf(")")).trim();
+                        console.log(title);
+                        console.log("|" + ticket_id + "| vs |" + cb_mojo_ext.ticket_id + "|");
+                        cb_mojo_ext.ticket_id = ticket_id;
+                        cb_mojo_ext.create_form_container();
                     } else {
                         if (cb_mojo_ext.$update_form != null) {
                             cb_mojo_ext.$update_form.remove();
@@ -75,7 +88,7 @@ function CB_Mojo_Extension() {
             });
         });
         if (document.URL.indexOf(cb_mojo_ext.mojo_domain) > -1 && document.URL.indexOf("ma/#/tickets/") > -1) {
-            cb_mojo_ext.enhance_mojo_ui();
+            cb_mojo_ext.enhance_mojo_ui(cb_mojo_ext);
         }
         cb_mojo_ext.observer.observe(cb_mojo_ext.target, {
             subtree: true,
@@ -85,20 +98,16 @@ function CB_Mojo_Extension() {
     });
     cb_mojo_ext.enhance_mojo_ui = function() {
         setTimeout(function(e) {
-            cb_mojo_ext.is_modal = true
-            cb_mojo_ext.ticket_id = window.location.href.split("/").slice(-1)[0].split("?").slice(0)[0];
             if (!$.isNumeric(cb_mojo_ext.ticket_id)) {
                 return;
             }
             jQuery("#ticket-form-info table tr").on("click", function() {
-                cb_mojo_ext.create_form();
-                cb_mojo_ext.get_queues();
+                cb_mojo_ext.create_form_container();
             });
             jQuery('a[ng-click="onEditAssigneeQueueType()"]').on("click", function() {
                 setTimeout(function() {
                     jQuery('a[ng-click="onSaveAssigneeQueueType()"]').on("click", function() {
-                        cb_mojo_ext.create_form();
-                        cb_mojo_ext.get_queues();
+                        cb_mojo_ext.create_form_container();
                     });
                 }, 1000)
             });
@@ -108,50 +117,70 @@ function CB_Mojo_Extension() {
                 $subcategory_field.prop('disabled', true);
                 $subcategory_field_change = jQuery("<button>Change Sub Category</button>");
                 $subcategory_field_change.on("click", function() {
-                    cb_mojo_ext.create_form();
-                    cb_mojo_ext.get_queues();
+                    cb_mojo_ext.create_form_container();
                 });
                 $subcategory_field_change.insertAfter($subcategory_field);
             });
         }, 1000);
     };
-    cb_mojo_ext.get_user = function(user_id) {
+    cb_mojo_ext.create_form_container = function() {
+        if ($("#" + cb_mojo_ext.popup_id).length > 0) {
+            return;
+        }
+        var html = "<div id='" + cb_mojo_ext.popup_id + "' class='scrollbox'>";
+        if (!cb_mojo_ext.is_modal) {
+            html = html + "<div class='title'>Mojo Update <img src='" + chrome.extension.getURL("icons/icon19.png") + "'></div>";
+        }
+        html = html + '<div class="ui-widget success_msg" style="display:none;"><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"><p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
+        html = html + '<div class="ui-widget error_msg" style="display:none;"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
+        html = html + "<div class='ticket_content'></div>";
+        html = html + "</div>";
+        if (cb_mojo_ext.is_modal) {
+            $("body").append(html);
+        } else {
+            $('div[role="complementary"] .u5').append(html);
+        }
+        cb_mojo_ext.$update_form = $("#" + cb_mojo_ext.popup_id);
+        cb_mojo_ext.$update_form.on("associated_users", cb_mojo_ext.get_associated_users);
+        CB_Mojo_UI.fill_form_container(cb_mojo_ext);
+        cb_mojo_ext.get_queues();
+    }
+    cb_mojo_ext.get_associated_users = function(event, associated_users) {
+        associated_users = Shared.unique(associated_users);
+        console.log(associated_users);
         if (!cb_mojo_ext.access_key) {
             cb_mojo_ext.$update_form.trigger("message", ["error", "Missing API Key <br/>" + cb_mojo_ext.option_page_url]);
             return;
         }
-        $.ajax({
-            url: "https://mysupport.mojohelpdesk.com/api/users/" + user_id + ".json?access_key=" + cb_mojo_ext.access_key,
-            // The name of the callback parameter, as specified by the YQL service
-            jsonp: "callback",
-            // Tell jQuery we're expecting JSONP
-            dataType: "json",
-            success: function(response) {},
-            error: function(response) {
-                //if (cb_mojo_ext.debug_mode == true) {
-                console.log(response);
-                //}
+        for (var i in associated_users) {
+            var email = associated_users[i];
+            if (typeof(email) == "undefined" || email == "undefined") {
+                CB_Mojo_UI.update_user("undefined", "Automated", cb_mojo_ext.automated_avatar_url);
+            } else {
+                $.ajax({
+                    url: "https://mysupport.mojohelpdesk.com/api/users/get_by_email.json?email=" + encodeURIComponent(email) + "&access_key=" + cb_mojo_ext.access_key,
+                    // The name of the callback parameter, as specified by the YQL service
+                    jsonp: "callback",
+                    // Tell jQuery we're expecting JSONP
+                    dataType: "json",
+                    success: function(response) {
+                        var email = response.user.email;
+                        var full_name = response.user.first_name + " " + response.user.last_name;
+                        var picture_url = response.user.picture_url;
+                        if (typeof(picture_url) == "undefined" || picture_url == "undefined" || picture_url == null || picture_url == "null") {
+                            picture_url = cb_mojo_ext.default_user_avatar_url;
+                        }
+                        CB_Mojo_UI.update_user(email, full_name, picture_url);
+                    },
+                    error: function(response) {
+                        //if (cb_mojo_ext.debug_mode == true) {
+                        console.log(response);
+                        //}
+                    }
+                });
             }
-        });
+        }
     };
-    cb_mojo_ext.clean_message_body = function(msg) {
-        var new_msg = msg;
-        new_msg = new_msg.replace("--My Issue-- Description:", "");
-        new_msg = new_msg.replace("Original Message:", "");
-        if (new_msg.indexOf("Disclaimer The information contained") > -1) {
-            new_msg = new_msg.substring(0, new_msg.indexOf("Disclaimer The information contained"));
-        }
-        if (new_msg.indexOf("\n\n\n") > -1) {
-            new_msg = new_msg.substring(0, new_msg.indexOf("\n\n\n"));
-        }
-        if (new_msg.indexOf("collectivebias.mojohelpdesk.com") > -1) {
-            new_msg = new_msg.substring(0, new_msg.indexOf("collectivebias.mojohelpdesk.com") - 34);
-        }
-        if (new_msg.indexOf("@collectivebias") > -1) {
-            new_msg = new_msg.substring(0, new_msg.indexOf("@collectivebias") - 40);
-        }
-        return new_msg;
-    }
     cb_mojo_ext.get_queues = function() {
         if (!cb_mojo_ext.access_key) {
             cb_mojo_ext.$update_form.trigger("message", ["error", "Missing API Key <br/>" + cb_mojo_ext.option_page_url]);
@@ -208,7 +237,50 @@ function CB_Mojo_Extension() {
             });
         }
     };
-    cb_mojo_ext.send_form = function() {
+    cb_mojo_ext.send_private_message = function(event) {
+        var ticket_id = event.data.ticket_id;
+        //var ticket_id = event.data("ticket_id");
+        var XMLData = "<comment>";
+        var value = "";
+        jQuery(".ticket_private_message textarea").each(function() {
+            var $this = $(this);
+            if ($(this).val()) {
+                value = $(this).val();
+                return false;
+            }
+        });
+        if (value == "") {
+            cb_mojo_ext.$update_form.trigger("message", ["error", "Please enter a message"]);
+            return;
+        }
+        XMLData = XMLData + "<body>" + value + "</body>";
+        XMLData = XMLData + "<is_private>true</is_private>";
+        XMLData = XMLData + "</comment>";
+        if (cb_mojo_ext.debug_mode == true) {
+            console.log(XMLData);
+        }
+        $.ajax({
+            url: "https://mysupport.mojohelpdesk.com/api/tickets/" + ticket_id + "/comments?access_key=" + cb_mojo_ext.access_key,
+            type: "POST",
+            contentType: 'application/xml',
+            processData: false,
+            data: XMLData,
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                jQuery(".ticket_messages").trigger("message", ["error", errorThrown]);
+            },
+            success: function(data, textStatus, XMLHttpRequest) {
+                jQuery(".ticket_messages").trigger("message", ["info", "Message Sent"]);
+                $(".ui-dialog-content").dialog("close");
+                jQuery(".ticket_private_message textarea").val("");
+                if (cb_mojo_ext.is_modal) {
+                    setTimeout(function() {
+                        location.reload();
+                    }, 750);
+                }
+            }
+        });
+    };
+    cb_mojo_ext.send_form = function(event) {
         var ticket_id = $(this).data("ticket_id");
         var XMLData = "<ticket>";
         XMLData = XMLData + "<ticket_queue_id>" + cb_mojo_ext.$update_form.find("#ticket_queue_id").val() + "</ticket_queue_id>"
@@ -243,22 +315,6 @@ function CB_Mojo_Extension() {
             }
         });
     };
-    cb_mojo_ext.isEmpty = function(str) {
-        return (!str || 0 === str.length);
-    };
-    cb_mojo_ext.convert_object = function(mojo_object) {
-        if (cb_mojo_ext.debug_mode == true) {
-            console.log(mojo_object);
-        }
-        var return_obj = {};
-        $.each(mojo_object, function() {
-            return_obj[this.id] = this.name;
-        });
-        if (cb_mojo_ext.debug_mode == true) {
-            console.log(return_obj);
-        }
-        return return_obj;
-    };
     cb_mojo_ext.get_ticket = function() {
         cb_mojo_ext.$update_form.find(".ticket_content").html("Loading Ticket #" + cb_mojo_ext.ticket_id + "<br/> Please Wait...");
         $.ajax({
@@ -273,115 +329,7 @@ function CB_Mojo_Extension() {
                     console.log(response);
                 }
                 if (response.ticket) {
-                    var ticket = response.ticket;
-                    var ticket_id = ticket.id;
-                    var status_id = ticket.status_id;
-                    var related_data = ticket.related_data;
-                    var ticket_type = ticket.ticket_type.name;
-                    var ticket_type_id = ticket.ticket_type.id;
-                    var assigned_to_id = ticket.assigned_to_id;
-                    var queue = related_data.queue;
-                    var messages = ticket.all_comments;
-                    var submitter_full_name = related_data.user.full_name;
-                    var submitter_picture_url = related_data.user.picture_url;
-                    var ticket_queue_id = queue.id;
-                    var ticket_queue_name = queue.name;
-                    var ticket_type_id = ticket.ticket_type.id;
-                    var ticket_description = ticket.description;
-                    var potential_assignees = ticket.potential_assignees;
-                    potential_assignees_fixed = cb_mojo_ext.convert_object(potential_assignees);
-                    var ticket_link = "";
-                    var extended_style = "";
-                    if (cb_mojo_ext.is_modal) {
-                        extended_style = "style='display:none'";
-                    }
-                    if (cb_mojo_ext.mojo_domain != "") {
-                        var ticket_link = "<a id='open_ticket' " + extended_style + " href='https://" + cb_mojo_ext.mojo_domain + "/tech/#" + ticket_id + "' target='_blank'>Open The Ticket<br/></a>"
-                    }
-                    var html = ticket_link + "<table>";
-                    html = html + "<tr " + extended_style + "><td>Ticket Type</td><td>" + cb_mojo_ext.create_select("ticket_type_id", cb_mojo_ext.ticket_options, ticket_type_id, "Please select type", false) + "</td></tr>";
-                    html = html + "<tr " + extended_style + "><td>Status</td><td>" + cb_mojo_ext.create_select("status_id", cb_mojo_ext.status_options, status_id, "Please select status", false) + "</td></tr>";
-                    html = html + "<tr " + extended_style + "><td>Queue</td><td>" + cb_mojo_ext.create_select("ticket_queue_id", cb_mojo_ext.queues, ticket_queue_id, "Please select queue", false) + "</td></tr>";
-                    html = html + "<tr " + extended_style + "><td>Assignee</td><td>" + cb_mojo_ext.create_select("assigned_to_id", potential_assignees_fixed, assigned_to_id, "Please select Assignee", false) + "</td></tr>";
-                    html = html + "<tr " + extended_style + "><td colspan=2><a id='assign_to_me' href='#'>Assign To Me</a></td></tr>";
-                    if (cb_mojo_ext.use_custom_fields == true) {
-                        html = html + cb_mojo_ext.create_custom_fields(cb_mojo_ext.custom_fields_json, ticket);
-                    }
-                    html = html + "</table>";
-                    html = html + "<button id='" + cb_mojo_ext.update_button_id + "' data-ticket_id='" + ticket_id + "' class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Update Ticket</button>";
-                    html = html + "<h4 data-cat='ticket_info'>Ticket Information</h4>";
-                    html = html + "<div class='ticket_info user_info' style='background-image:url(" + submitter_picture_url + ")'>Submitted By " + submitter_full_name + "</div>";
-                    html = html + "<div class='ticket_info scrollbox'>" + cb_mojo_ext.clean_message_body(ticket_description) + "</div>";
-                    if (!cb_mojo_ext.is_modal) {
-                        html = html + "<h4 data-cat='ticket_messages'>Messages</h4>";
-                        html = html + "<div class='scrollbox ticket_messages'><ul>";
-                        $.each(messages, function(k, v) {
-                            if (!cb_mojo_ext.isEmpty(v.body)) {
-                                html = html + "<li>" + cb_mojo_ext.clean_message_body(v.body) + "</li>";
-                            }
-                        });
-                        html = html + "</ul></div>";
-                        html = html + "<h4 data-cat='ticket_private_message'>Send Private Message</h4>";
-                        html = html + "<textarea class='ticket_private_message'></textarea>";
-                        html = html + "<button class='ticket_private_message'>Send</button>";
-                    }
-                    if (cb_mojo_ext.debug_mode == true) {
-                        console.log(ticket.related_data.queue.name);
-                    }
-                    cb_mojo_ext.$update_form.find(".ticket_content").html(html);
-                    $("#" + cb_mojo_ext.update_button_id).click(cb_mojo_ext.send_form);
-                    cb_mojo_ext.$update_form.find('[data-dependent-to]').on("dependent_change", function() {
-                        $this = $(this);
-                        $dependent_to = cb_mojo_ext.$update_form.find("#" + $this.data("dependent-to"));
-                        $this.find('option').remove();
-                        var dependent_options = JSON.parse($this.attr('data-dependent-options'));
-                        if (cb_mojo_ext.debug_mode == true) {
-                            console.log(dependent_options[$dependent_to.val()]);
-                        }
-                        $this.append(cb_mojo_ext.create_options(dependent_options[$dependent_to.val()], $this.attr("title"), $this.data("orig-value")));
-                    });
-                    cb_mojo_ext.$update_form.find('[data-dependent-to]').each(function() {
-                        $this = $(this);
-                        $dependent_to = cb_mojo_ext.$update_form.find("#" + $this.data("dependent-to"));
-                        if ($dependent_to.length > 0) {
-                            $dependent_to.on("change", function() {
-                                $this.trigger("dependent_change");
-                            });
-                        }
-                    })
-                    cb_mojo_ext.$update_form.find('[data-dependent-to]').trigger("dependent_change");
-                    $assignee_select = cb_mojo_ext.$update_form.find("#assigned_to_id");
-                    $assignee_select.change(function() {
-                        if (!$(this).val()) {
-                            $(this).css("background-color", "red");
-                        } else {
-                            $(this).css("background-color", "");
-                        }
-                    }).change();
-                    cb_mojo_ext.$update_form.find('#assign_to_me').click(function(e) {
-                        e.preventDefault();
-                        $assignee_select.val(cb_mojo_ext.mojo_agent_id);
-                        $assignee_select.trigger("change");
-                    });
-
-                    function byTextCaseInsensitive(a, b) {
-                        var ta = a.text.toUpperCase(),
-                            tb = b.text.toUpperCase();
-                        return ta === tb ? 0 : ta < tb ? -1 : 1;
-                    }
-                    var $form_selects_to_be_sorted = cb_mojo_ext.$update_form.find('#assigned_to_id');
-                    $form_selects_to_be_sorted.each(function() {
-                        var $this = $(this);
-                        $this.find("option").sort(byTextCaseInsensitive).appendTo(this);
-                        var $el = $this.find('option[value=""]');
-                        $this.find('option[value=""]').remove();
-                        $this.find('option:eq(0)').before($el);
-                        $this.val(assigned_to_id);
-                    });
-                    jQuery("[data-cat]").on("click", function(e) {
-                        $this = jQuery(this);
-                        jQuery("." + $this.data("cat")).toggle();
-                    });
+                    CB_Mojo_UI.create_form(response, cb_mojo_ext);
                 }
             },
             error: function(response) {
@@ -390,129 +338,6 @@ function CB_Mojo_Extension() {
                 }
             }
         });
-    };
-    cb_mojo_ext.create_custom_fields = function(custom_fields_json, ticket) {
-        if (cb_mojo_ext.debug_mode == true) {
-            console.log(custom_fields_json);
-        }
-        var custom_html = "";
-        $.each(custom_fields_json, function(fieldName, fieldInfo) {
-            var value = "";
-            if (cb_mojo_ext.debug_mode == true) {
-                console.log(fieldInfo);
-            }
-            if (ticket.hasOwnProperty(fieldName)) {
-                value = ticket[fieldName];
-            }
-            switch (fieldInfo.field_type) {
-                case "select":
-                    if (cb_mojo_ext.debug_mode == true) {
-                        console.log(fieldInfo);
-                    }
-                    var dependent_to = ""
-                    if (fieldInfo.hasOwnProperty("dependent_to") && fieldInfo["dependent_to"] != "") {
-                        dependent_to = fieldInfo.dependent_to;
-                    }
-                    custom_html = custom_html + "<tr><td>" + fieldInfo.pretty_name + "</td><td>" + cb_mojo_ext.create_select(fieldName, fieldInfo.options, value, "Please Select " + fieldInfo.pretty_name, true, dependent_to); + "</td></tr>";
-                    break;
-                case "input":
-                    custom_html = custom_html + "<tr><td>" + fieldInfo.pretty_name + "</td><td><input type='text' id='" + fieldName + "' name='" + fieldName + "' value='" + value + "' placeholder='Please Enter " + fieldInfo.pretty_name + "' class='" + cb_mojo_ext.custom_class + "' /></td></tr>";
-                    break;
-            }
-        });
-        return custom_html;
-    };
-    cb_mojo_ext.create_select = function(name, options, value, call_to_action, is_custom, dependent_to) {
-        var custom_class = "";
-        if (cb_mojo_ext.debug_mode == true) {
-            console.log(value);
-        }
-        if (cb_mojo_ext.debug_mode == true) {
-            console.log(options);
-        }
-        if (is_custom == true) {
-            custom_class = cb_mojo_ext.custom_class;
-        }
-        var dependent_options = "";
-        if (typeof(dependent_to) != "undefined") {
-            dependent_to = "data-dependent-to='" + dependent_to + "' data-dependent-options=\'" + JSON.stringify(options).replace(/'/g, "\\'") + "'";
-            options = "";
-        }
-        var select_html = '<select title="' + call_to_action + '" id="' + name + '" name="' + name + '" data-orig-value="' + value + '" ' + dependent_to + '  class="selectmenu ' + custom_class + '">';
-        select_html = select_html + cb_mojo_ext.create_options(options, call_to_action, value);
-        select_html = select_html + '</select>';
-        return select_html;
-    };
-    cb_mojo_ext.create_options = function(options, call_to_action, value) {
-        var options_html = '<option value="">' + call_to_action + '</option>';
-        $.each(options, function(k, v) {
-            selected = ""
-            if (value == k) {
-                selected = "selected='selected'"
-            }
-            options_html = options_html + '<option value="' + k + '" ' + selected + '>' + v + '</option>'
-        });
-        return options_html;
-    };
-    cb_mojo_ext.create_form = function() {
-        var html = "<div id='" + cb_mojo_ext.popup_id + "' class='scrollbox'>";
-        if (!cb_mojo_ext.is_modal) {
-            html = html + "<div class='title'>Mojo Update <img src='" + chrome.extension.getURL("icons/icon19.png") + "'></div>";
-        }
-        html = html + '<div class="ui-widget success_msg" style="display:none;"><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"><p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
-        html = html + '<div class="ui-widget error_msg" style="display:none;"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
-        html = html + "<div class='ticket_content'></div>";
-        html = html + "</div>";
-        if (cb_mojo_ext.is_modal) {
-            $("body").append(html);
-        } else {
-            $('div[role="complementary"] .u5').append(html);
-        }
-        cb_mojo_ext.$update_form = $("#" + cb_mojo_ext.popup_id);
-        cb_mojo_ext.$update_form.on("message", function(event, type, message) {
-            var $error_notification = cb_mojo_ext.$update_form.find('.error_msg');
-            var $success_notification = cb_mojo_ext.$update_form.find('.success_msg');
-            $error_notification.hide();
-            $success_notification.hide();
-            if (type == "error") {
-                $error_notification.find('.message').html(message);
-                $error_notification.show();
-            } else if (type == "info") {
-                $success_notification.find('.message').html(message);
-                $success_notification.show();
-                setTimeout(function() {
-                    $success_notification.hide();
-                }, 5000);
-            } else if (type == "clear") {
-                //Do Nothing
-            }
-        });
-        if (cb_mojo_ext.is_modal) {
-            cb_mojo_ext.$update_form.addClass("draggable");
-            var dialog_options = {
-                title: "Mojo Update",
-                create: function() {
-                    $(this).prev('.ui-dialog-titlebar').find('.ui-dialog-title').after("<img src='" + chrome.extension.getURL("icons/icon19.png") + "'>");
-                },
-                draggable: true,
-                modal: true,
-                position: {
-                    my: "center",
-                    at: "center",
-                    of: window
-                }
-            };
-            var dialog_options_extended = {
-                "closable": true,
-                "titlebar": "transparent",
-                "icons": {
-                    "close": "ui-icon-circle-close"
-                }
-            };
-            cb_mojo_ext.$update_form.dialog(dialog_options).dialogExtend(dialog_options_extended);
-        } else {
-            cb_mojo_ext.$update_form.addClass("sbar");
-        }
     };
     console.log("Finished Loading Mojo HelpDesk Extension by Collective Bias");
 }

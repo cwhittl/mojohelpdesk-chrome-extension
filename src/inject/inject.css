@@ -9,20 +9,27 @@
 #cb_mojo_display {
     font-family: 'Open Sans', sans-serif;
     height: 450px;
+    width: 200px;
     overflow: hidden;
+    position: relative;
 }
-#cb_mojo_display ::-webkit-scrollbar {
+
+#cb_mojo_display::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 10px;
 }
-#cb_mojo_display ::-webkit-scrollbar-thumb {
+
+#cb_mojo_display::-webkit-scrollbar-thumb {
     border-radius: 6px;
-    background-color: rgba(0,0,0,.5);
-    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
-#cb_mojo_display .ticket_info, #cb_mojo_display .ticket_private_message, #cb_mojo_display  .ticket_messages {
-	display: none;
+
+#cb_mojo_display .ticket_info, #cb_mojo_display .ticket_private_message, #cb_mojo_display .ticket_messages {
+    display: none;
 }
+
+
 /** Directed At Modal Mode **/
 
 #cb_mojo_display.draggable {
@@ -70,18 +77,92 @@
     width: 220px;
     height: 100px;
     overflow: hidden;
-    overflow-y:scroll;
+    overflow-y: scroll;
 }
 
-.user_info {
-	height: 30px;
-	width: 100%;
-	display: block;
-	background-position: right;
-	line-height: 30px;
-	background-size: 30px 30px;
+#cb_mojo_display.sbar .info_cat {
+    min-height: 30px;
+    border-bottom: 1px solid gray;
+    padding-bottom: 10px;
+    width: 100%;
+    display: block;
+}
+
+#cb_mojo_display.sbar .info_cat_header {
+    font-weight: bold;
+    height: 30px;
+    width: 100%;
+    display: block;
+    line-height: 30px;
+}
+
+#cb_mojo_display.sbar .info_cat_header span {
+    float: right;
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+    line-height: 15px;
+    display: block;
+}
+
+#cb_mojo_display.sbar .info_cat_header span.toggle {
+    line-height: 11px;
+}
+
+.ticket_messages ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.ticket_messages .message_header {
+    display: block;
+    height: 30px;
+    width: 100%;
+    border-top: 1px solid #000;
+    border-bottom: 1px dashed #000;
+    margin-bottom: 5px;
+}
+
+.ticket_messages .message_header .user_pic {
+    height: 30px;
+    width: 30px;
+    display: block;
+    float: left;
+    background-position: left;
+    background-size: 30px 30px;
     background-repeat: no-repeat;
 }
+
+.ticket_messages .user_info, .time_info {
+    float: left;
+    display: block;
+    width: 175px;
+    height: 15px;
+    line-height: 15px;
+    display: block;
+    overflow: hidden;
+}
+
+.ticket_messages .user_info {
+    font-weight: bold;
+    clear: right;
+}
+
+.time_info {}
+.ticket_private_message{}
+ .ticket_private_message textarea {
+    width: 90%;
+    height: 70px;
+    display: block;
+    position: relative;
+}
+
+.ticket_private_message button {
+    width: 90%;
+    clear: both;
+}
+
 
 /** Directed At All Modes **/
 
