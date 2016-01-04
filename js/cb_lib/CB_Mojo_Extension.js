@@ -88,6 +88,9 @@ function CB_Mojo_Extension() {
             });
         });
         if (document.URL.indexOf(cb_mojo_ext.mojo_domain) > -1 && document.URL.indexOf("ma/#/tickets/") > -1) {
+            cb_mojo_ext.is_modal = true
+            var ticket_id = window.location.href.split("/").slice(-1)[0].split("?").slice(0)[0];
+            cb_mojo_ext.ticket_id = ticket_id;
             cb_mojo_ext.enhance_mojo_ui(cb_mojo_ext);
         }
         cb_mojo_ext.observer.observe(cb_mojo_ext.target, {
@@ -141,7 +144,9 @@ function CB_Mojo_Extension() {
             $('div[role="complementary"] .u5').append(html);
         }
         cb_mojo_ext.$update_form = $("#" + cb_mojo_ext.popup_id);
-        cb_mojo_ext.$update_form.on("associated_users", cb_mojo_ext.get_associated_users);
+        if (!cb_mojo_ext.is_modal) {
+            cb_mojo_ext.$update_form.on("associated_users", cb_mojo_ext.get_associated_users);
+        }
         CB_Mojo_UI.fill_form_container(cb_mojo_ext);
         cb_mojo_ext.get_queues();
     }
@@ -250,7 +255,7 @@ function CB_Mojo_Extension() {
             }
         });
         if (value == "") {
-            cb_mojo_ext.$update_form.trigger("message", ["error", "Please enter a message"]);
+            jQuery(".ticket_private_message").trigger("message", ["error", "Please enter a message"]);
             return;
         }
         XMLData = XMLData + "<body>" + value + "</body>";
@@ -266,17 +271,14 @@ function CB_Mojo_Extension() {
             processData: false,
             data: XMLData,
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                jQuery(".ticket_messages").trigger("message", ["error", errorThrown]);
+                jQuery(".ticket_private_message").trigger("message", ["error", errorThrown]);
             },
             success: function(data, textStatus, XMLHttpRequest) {
-                jQuery(".ticket_messages").trigger("message", ["info", "Message Sent"]);
-                $(".ui-dialog-content").dialog("close");
+                jQuery(".ticket_private_message").trigger("message", ["info", "Message Sent"]);
                 jQuery(".ticket_private_message textarea").val("");
-                if (cb_mojo_ext.is_modal) {
-                    setTimeout(function() {
-                        location.reload();
-                    }, 750);
-                }
+                setTimeout(function() {
+                    $(".ui-dialog-content").dialog("close");
+                }, 1500);
             }
         });
     };

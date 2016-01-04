@@ -14,12 +14,12 @@
     position: relative;
 }
 
-#cb_mojo_display::-webkit-scrollbar {
+::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 10px;
 }
 
-#cb_mojo_display::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     border-radius: 6px;
     background-color: rgba(0, 0, 0, .5);
     -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
@@ -149,9 +149,18 @@
     clear: right;
 }
 
-.time_info {}
-.ticket_private_message{}
- .ticket_private_message textarea {
+.ticket_messages .is_private {
+    background-color: lightgray;
+    -webkit-filter: invert(.8);
+}
+
+.ui-dialog-content .user_info, .ui-dialog-content .time_info {
+    width: 40%;
+}
+
+.ticket_private_message {}
+
+.ticket_private_message textarea {
     width: 90%;
     height: 70px;
     display: block;

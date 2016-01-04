@@ -37,27 +37,26 @@ CB_Mojo_UI.create_form = function(response, cb_mojo_ext) {
     }
     html = html + "</table>";
     html = html + "<button id='" + cb_mojo_ext.update_button_id + "' data-ticket_id='" + ticket_id + "' class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Update Ticket</button>";
-    html = html + "<div class='info_cat' data-cat='ticket_info'>";
-    html = html + "<div class='info_cat_header'>Ticket Information<span class='toggle'>&#43;</span><span class='maximize'>&#8598;</span></div>";
-    html = html + "<div class='ticket_info' style='background-image:url(" + submitter_picture_url + ")'>Submitted By " + submitter_full_name + "</div>";
-    html = html + "<div class='ticket_info scrollbox'>" + Shared.linkify(Shared.clean_message_body(ticket_description)) + "</div>";
-    html = html + "</div>";
     if (!cb_mojo_ext.is_modal) {
+        html = html + "<div class='info_cat' data-cat='ticket_info'>";
+        html = html + "<div class='info_cat_header'>Ticket Information<span class='toggle'>&#43;</span><span class='maximize'>&#8598;</span></div>";
+        html = html + "<div class='ticket_info' style='background-image:url(" + submitter_picture_url + ")'>Submitted By " + submitter_full_name + "</div>";
+        html = html + "<div class='ticket_info scrollbox'>" + Shared.linkify(Shared.clean_message_body(ticket_description)) + "</div>";
+        html = html + "</div>";
         html = html + "<div class='info_cat' data-cat='ticket_messages'>";
         html = html + "<div class='info_cat_header'>Messages (" + messages.length + ")<span class='toggle'>&#43;</span><span class='maximize'>&#8598;</span></div>";
         html = html + "<div class='scrollbox ticket_messages'>";
-        html = html + '<div class="ui-widget success_msg" style="display:none;"><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"><p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
-        html = html + '<div class="ui-widget error_msg" style="display:none;"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
         html = html + "<ul>";
         var associated_users = [];
         var messages_html = "";
         $.each(messages, function(k, v) {
             if (!Shared.isEmpty(v.body)) {
                 var messager_email = v.related_data.user.email;
+                var is_private = ((v.is_private == true) ? "is_private" : "is_public");
                 associated_users.push(messager_email);
                 //var message_date = Shared.getLocalTimeFromGMT(v.created_on);
                 var message_date = new Date(v.created_on);
-                messages_html = "<li><div class='message_header'><span class='user_pic' data-email='" + messager_email + "'></span><span class='user_info' data-email='" + messager_email + "'></span><span class='time_info'>On " + message_date.toLocaleString() + "</span></div>" + Shared.linkify(Shared.clean_message_body(v.body)) + "</li>" + messages_html;
+                messages_html = "<li class='" + is_private + "'><div class='message_header'><span class='user_pic' data-email='" + messager_email + "'></span><span class='user_info' data-email='" + messager_email + "'></span><span class='time_info'>On " + message_date.toLocaleString() + "</span></div>" + Shared.linkify(Shared.clean_message_body(v.body)) + "</li>" + messages_html;
             }
         });
         html = html + messages_html;
@@ -65,7 +64,10 @@ CB_Mojo_UI.create_form = function(response, cb_mojo_ext) {
         html = html + "</div>";
         html = html + "<div class='info_cat' data-cat='ticket_private_message'>";
         html = html + "<div class='info_cat_header' >Send Private Message<span class='toggle'>&#43;</span><span class='maximize'>&#8598;</span></div>";
-        html = html + "<div class='ticket_private_message'><textarea></textarea>";
+        html = html + "<div class='ticket_private_message'>"
+        html = html + '<div class="ui-widget success_msg" style="display:none;"><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"><p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
+        html = html + '<div class="ui-widget error_msg" style="display:none;"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><span class="message"></span></p></div></div>';
+        html = html + "<textarea></textarea>";
         html = html + "<button class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Send Message</button>";
         html = html + "</div>";
         html = html + "</div>";
@@ -75,7 +77,7 @@ CB_Mojo_UI.create_form = function(response, cb_mojo_ext) {
     }
     cb_mojo_ext.$update_form.find(".ticket_content").html(html);
     cb_mojo_ext.$update_form.trigger("associated_users", [associated_users]);
-    cb_mojo_ext.$update_form.find(".ticket_messages").on("message", CB_Mojo_UI.create_message);
+    cb_mojo_ext.$update_form.find(".ticket_private_message").on("message", CB_Mojo_UI.create_message);
     cb_mojo_ext.$update_form.find(".info_cat[data-cat='ticket_messages']").find(".maximize").on("click", {
         title: "Messages",
         element: jQuery(".ticket_messages")
@@ -209,6 +211,7 @@ CB_Mojo_UI.create_select = function(name, options, value, call_to_action, is_cus
 CB_Mojo_UI.update_user = function(user_email, user_name, user_pic) {
     jQuery(".user_pic[data-email='" + user_email + "']").css("background-image", "url(" + user_pic + ")");
     jQuery(".user_info[data-email='" + user_email + "']").html(user_name);
+    jQuery(".is_private .user_info[data-email='" + user_email + "']").html(user_name + " (Private)");
 };
 CB_Mojo_UI.create_options = function(options, call_to_action, value, cb_mojo_ext) {
     var options_html = '<option value="">' + call_to_action + '</option>';
@@ -223,7 +226,7 @@ CB_Mojo_UI.create_options = function(options, call_to_action, value, cb_mojo_ext
 };
 CB_Mojo_UI.make_me_a_dialog = function(event) {
     //event.preventDefault();
-    var clone = event.data.element.clone(true,true);
+    var clone = event.data.element.clone(true, true);
     clone.dialog({
         "title": event.data.title,
         modal: true,
