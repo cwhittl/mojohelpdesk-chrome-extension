@@ -30,14 +30,6 @@
         "js/jquery-ui/jquery-ui-fixed.css",
         "src/inject/inject.css"
       ],
-      "run_at": "document_end"
-    },
-    {
-      "matches": [
-        "https://mail.google.com/*",
-        "https://mail.collectivebias.com/*",
-        "https://*.mojohelpdesk.com/*"
-      ],
       "js": [
         "js/jquery/jquery.js",
         "js/jquery-ui/jquery-ui.min.js",
@@ -46,7 +38,8 @@
         "js/cb_lib/CB_Mojo_UI.js",
         "js/cb_lib/CB_Mojo_Extension.js",
         "src/inject/inject.js"
-      ]
+      ],
+      "run_at": "document_end"
     }
   ]
 }
