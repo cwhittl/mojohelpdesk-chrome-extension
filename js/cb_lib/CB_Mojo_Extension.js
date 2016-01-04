@@ -38,7 +38,36 @@ function CB_Mojo_Extension() {
         api_key: '',
         debug_mode: false,
         mojo_domain: '',
-        custom_fields_json: {},
+        custom_fields_json: {
+            "custom_field_sub_category": {
+                "dependent_to": "ticket_type_id",
+                "field_type": "select",
+                "options": {
+                    "66168": {
+                        "enhancement request/feedback": "Enhancement Request/feedback",
+                        "how to/training issue": "How To/training Issue",
+                        "issue": "Issue",
+                        "user error": "User Error"
+                    },
+                    "66169": {
+                        "application issue or failure": "Application Issue or Failure",
+                        "hardware issue or failure": "Hardware Issue or Failure",
+                        "network issue or failure": "Network Issue or Failure"
+                    },
+                    "66170": {
+                        "bug": "Bug",
+                        "duplicate": "Duplicate",
+                        "known error": "Known Error"
+                    },
+                    "66171": {
+                        "account/identity management task": "Account/identity Management Task",
+                        "enhancement task": "Enhancement Task",
+                        "support/training task": "Support/training Task"
+                    }
+                },
+                "pretty_name": "Sub Category"
+            }
+        },
         email_address: "",
         mojo_agent_id: "",
         use_custom_fields: true,
@@ -64,7 +93,9 @@ function CB_Mojo_Extension() {
                     return;
                 }
                 cb_mojo_ext.baseURI = mutation.target.baseURI;
+                if (cb_mojo_ext.debug_mode == true) {
                 console.log(mutation);
+            }
                 if (document.URL.indexOf(cb_mojo_ext.mojo_domain) > -1 && document.URL.indexOf("ma/#/tickets/") > -1) {
                     cb_mojo_ext.is_modal = true
                     var ticket_id = window.location.href.split("/").slice(-1)[0].split("?").slice(0)[0];
@@ -75,8 +106,6 @@ function CB_Mojo_Extension() {
                     cb_mojo_ext.title_selector = items.title_selector;
                     if (title.indexOf(cb_mojo_ext.title_selector) > 0 && title.indexOf("(#") > 0) {
                         var ticket_id = title.substring(title.indexOf("(#") + 2, title.lastIndexOf(")")).trim();
-                        console.log(title);
-                        console.log("|" + ticket_id + "| vs |" + cb_mojo_ext.ticket_id + "|");
                         cb_mojo_ext.ticket_id = ticket_id;
                         cb_mojo_ext.create_form_container();
                     } else {
@@ -152,7 +181,9 @@ function CB_Mojo_Extension() {
     }
     cb_mojo_ext.get_associated_users = function(event, associated_users) {
         associated_users = Shared.unique(associated_users);
+        if (cb_mojo_ext.debug_mode == true) {
         console.log(associated_users);
+}
         if (!cb_mojo_ext.access_key) {
             cb_mojo_ext.$update_form.trigger("message", ["error", "Missing API Key <br/>" + cb_mojo_ext.option_page_url]);
             return;
@@ -294,7 +325,6 @@ function CB_Mojo_Extension() {
             XMLData = XMLData + "<" + $this.attr("id") + ">" + $(this).val() + "</" + $this.attr("id") + ">";
         });
         XMLData = XMLData + "</ticket>";
-        console.log(XMLData);
         if (cb_mojo_ext.debug_mode == true) {
             console.log(XMLData);
         }
