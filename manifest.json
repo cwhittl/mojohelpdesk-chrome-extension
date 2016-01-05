@@ -1,0 +1,38 @@
+{
+  "name": "Mojo HelpDesk Extension by Collective Bias",
+  "version": "3.5",
+  "manifest_version": 2,
+  "description": "Unofficial extension for Mojo HelpDesk that adds additional functionallity for tickets received in Gmail.",
+  "homepage_url": "http://collectivebias.com",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "options_page": "options.js",
+  "web_accessible_resources": ["src/options/options.html","icons/icon19.png","icons/optimus.gif","icons/default_user.png"],
+  "permissions": [
+    "storage",
+    "https://mail.google.com/*",
+    "https://mail.collectivebias.com/*",
+    "https://mysupport.mojohelpdesk.com/*",
+    "https://*.mojohelpdesk.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*",
+        "https://mail.collectivebias.com/*",
+        "https://*.mojohelpdesk.com/*"
+      ],
+      "css": [],
+      "js": [
+        "lib/react-0.14.5/react.js",
+        "lib/react-0.14.5/react-dom.js",
+        "components/App.js",
+        "index.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}
