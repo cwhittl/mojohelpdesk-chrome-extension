@@ -39,7 +39,7 @@ Shared.byTextCaseInsensitive = function(a, b) {
         tb = b.text.toUpperCase();
     return ta === tb ? 0 : ta < tb ? -1 : 1;
 };
-Shared.clean_message_body = function(msg) {
+Shared.clean_message_body = function(msg,mojo_domain) {
     var new_msg = msg;
     new_msg = new_msg.replace(/Automation /g, "");
     new_msg = new_msg.replace(/--My Issue--\nDescription:/g, "");
@@ -50,11 +50,11 @@ Shared.clean_message_body = function(msg) {
     if (new_msg.indexOf("\n\n\n") > -1) {
         new_msg = new_msg.substring(0, new_msg.indexOf("\n\n\n"));
     }
-    if (new_msg.indexOf("collectivebias.mojohelpdesk.com") > -1) {
-        new_msg = new_msg.substring(0, new_msg.indexOf("collectivebias.mojohelpdesk.com") - 34);
+    if (new_msg.indexOf(mojo_domain) > -1) {
+        new_msg = new_msg.substring(0, new_msg.indexOf(mojo_domain) - 34);
     }
-    if (new_msg.indexOf("@collectivebias") > -1) {
+    /*if (new_msg.indexOf("@collectivebias") > -1) {
         new_msg = new_msg.substring(0, new_msg.indexOf("@collectivebias") - 40);
-    }
+    }*/
     return new_msg;
 };

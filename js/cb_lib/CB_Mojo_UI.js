@@ -41,7 +41,7 @@ CB_Mojo_UI.create_form = function(response, cb_mojo_ext) {
         html = html + "<div class='info_cat' data-cat='ticket_info'>";
         html = html + "<div class='info_cat_header'>Ticket Information<span class='toggle'>&#43;</span><span class='maximize'>&#8598;</span></div>";
         html = html + "<div class='ticket_info' style='background-image:url(" + submitter_picture_url + ")'>Submitted By " + submitter_full_name + "</div>";
-        html = html + "<div class='ticket_info scrollbox'>" + Shared.linkify(Shared.clean_message_body(ticket_description)) + "</div>";
+        html = html + "<div class='ticket_info scrollbox'>" + Shared.linkify(Shared.clean_message_body(ticket_description,cb_mojo_ext.mojo_domain)) + "</div>";
         html = html + "</div>";
         html = html + "<div class='info_cat' data-cat='ticket_messages'>";
         html = html + "<div class='info_cat_header'>Messages (" + messages.length + ")<span class='toggle'>&#43;</span><span class='maximize'>&#8598;</span></div>";
@@ -56,7 +56,7 @@ CB_Mojo_UI.create_form = function(response, cb_mojo_ext) {
                 associated_users.push(messager_email);
                 //var message_date = Shared.getLocalTimeFromGMT(v.created_on);
                 var message_date = new Date(v.created_on);
-                messages_html = "<li class='" + is_private + "'><div class='message_header'><span class='user_pic' data-email='" + messager_email + "'></span><span class='user_info' data-email='" + messager_email + "'></span><span class='time_info'>On " + message_date.toLocaleString() + "</span></div>" + Shared.linkify(Shared.clean_message_body(v.body)) + "</li>" + messages_html;
+                messages_html = "<li class='" + is_private + "'><div class='message_header'><span class='user_pic' data-email='" + messager_email + "'></span><span class='user_info' data-email='" + messager_email + "'></span><span class='time_info'>On " + message_date.toLocaleString() + "</span></div>" + Shared.linkify(Shared.clean_message_body(v.body,cb_mojo_ext.mojo_domain)) + "</li>" + messages_html;
             }
         });
         html = html + messages_html;
