@@ -7,11 +7,11 @@ var Ticket_Update_Form = React.createClass({
         event.preventDefault();
         console.log("HI!");
     },
-    render: function() {
+    render_content: function(event) {
         var R = React.DOM;
         var form = R.form;
         var input = R.input;
-        return form({
+        return content = form({
             className: "commentForm"
         }, input({
             type: "text",
@@ -25,5 +25,27 @@ var Ticket_Update_Form = React.createClass({
             value: "Post",
             onClick: this.updateForm
         }));
+    },
+    handleMaximize: function(event) {
+        console.log("GO GO MAXIMIZE");
+        //$clone = $(this).clone();
+        /*ReactDOM.render(React.createElement(Modal,{
+            children:this.render_content(),
+            show:true
+        }),document.querySelector('[role="complementary"] .u5'));*/
+        //$(ReactDOM.findDOMNode(this)).clone().appendTo("body");
+    },
+    render: function() {
+        return React.createElement(Portlet, {
+            key:"fred",
+            is_mac: true,
+            disable_close: true,
+            disable_maximize: false,
+            title: "Update",
+            draggable: false,
+            minimized: false,
+            content: this.render_content(),
+            handleMaximize: this.handleMaximize
+        });
     }
 });

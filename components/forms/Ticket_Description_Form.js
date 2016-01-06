@@ -11,7 +11,7 @@ var Ticket_Description_Form = React.createClass({
         var R = React.DOM;
         var form = R.form;
         var input = R.input;
-        return form({
+        var content = form({
             className: "commentForm"
         }, input({
             type: "text",
@@ -25,5 +25,12 @@ var Ticket_Description_Form = React.createClass({
             value: "Post",
             onClick: this.updateForm
         }));
+        return React.createElement(Portlet, {
+            is_mac: true,
+            disable_close: true,
+            title: "Messages",
+            draggable: false,
+            content: content
+        });
     }
 });

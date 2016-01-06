@@ -20,7 +20,7 @@ var Ticket_Private_Message_Form = React.createClass({
         var form = R.form;
         var textarea = R.textarea;
         var button = R.button;
-        return form({
+        var content = form({
             className: "privateMessageForm"
         }, textarea({
             name: "message",
@@ -31,5 +31,11 @@ var Ticket_Private_Message_Form = React.createClass({
             type: "button",
             onClick: this.updateForm
         }, "Send Message"));
+        return React.createElement(Portlet, {
+            is_mac: true,
+            title: "Send Private Message",
+            draggable: false,
+            content: content
+        });
     }
 });

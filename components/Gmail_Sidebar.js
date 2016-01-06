@@ -5,6 +5,10 @@ var Gmail_Sidebar = React.createClass({
         var div = R.div;
         return div({
             className: "mojo_gmail_sidebar"
-        }, React.createElement(Ticket_Update_Form), React.createElement(Ticket_Messages_Form), React.createElement(Ticket_Private_Message_Form,{fred:"fred1"}));
+        }, div({
+            className: "mojo_gmail_sidebar_title"
+        }, "Mojo Help Desk"), React.createElement(Ticket_Update_Form), React.createElement(Ticket_Messages_Form), React.createElement(Ticket_Private_Message_Form, {
+            fred: "fred1"
+        }));
     }
 });

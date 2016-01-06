@@ -10,7 +10,7 @@
     "128": "icons/icon128.png"
   },
   "options_page": "options.js",
-  "web_accessible_resources": ["src/options/options.html","icons/icon19.png","icons/optimus.gif","icons/default_user.png"],
+  "web_accessible_resources": ["components/Portlet/stoplight.png","icons/icon19.png","icons/optimus.gif","icons/default_user.png"],
   "permissions": [
     "storage",
     "https://mail.google.com/*",
@@ -25,12 +25,17 @@
         "https://mail.collectivebias.com/*",
         "https://*.mojohelpdesk.com/*"
       ],
-      "css": [],
+      "css": [
+        "components/Portlet/Portlet.css"
+      ],
       "js": [
         "lib/jquery-2.1.4.min.js",
         "lib/react-0.14.5/react.js",
         "lib/react-0.14.5/react-dom.js",
+        "lib/classnames.js",
         "lib/Shared.js",
+        "components/Modal.js",
+        "components/Portlet/Portlet.js",
         "services/API_Connector.js",
         "components/forms/Ticket_Private_Message_Form.js",
         "components/forms/Ticket_Update_Form.js",
