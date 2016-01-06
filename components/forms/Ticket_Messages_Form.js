@@ -1,7 +1,12 @@
 var Ticket_Messages_Form = React.createClass({
     displayName: 'CommentBox',
-    handleChange: function(event) {
-        console.log(event.target.value);
+    getInitialState: function() {
+        return {
+            messages: ''
+        };
+    },
+    componentDidMount: function() {
+        API_Connector.get_messages(this);
     },
     updateForm: function(event) {
         event.preventDefault();
@@ -11,7 +16,10 @@ var Ticket_Messages_Form = React.createClass({
         var R = React.DOM;
         var form = R.form;
         var input = R.input;
-        return form({
+        return R.ul({
+            className: "messages"
+        }, this.state.messages);
+        /*return form({
             className: "commentForm"
         }, input({
             type: "text",
@@ -24,6 +32,6 @@ var Ticket_Messages_Form = React.createClass({
             type: "submit",
             value: "Post",
             onClick: this.updateForm
-        }));
+        }));*/
     }
 });

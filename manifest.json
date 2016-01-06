@@ -27,8 +27,11 @@
       ],
       "css": [],
       "js": [
+        "lib/jquery-2.1.4.min.js",
         "lib/react-0.14.5/react.js",
         "lib/react-0.14.5/react-dom.js",
+        "lib/Shared.js",
+        "services/API_Connector.js",
         "components/forms/Ticket_Private_Message_Form.js",
         "components/forms/Ticket_Update_Form.js",
         "components/forms/Ticket_Messages_Form.js",

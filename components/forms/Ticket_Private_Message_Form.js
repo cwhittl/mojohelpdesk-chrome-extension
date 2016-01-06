@@ -7,14 +7,13 @@ var Ticket_Private_Message_Form = React.createClass({
     },
     handleChange: function(event) {
         this.setState({
-          message: event.target.value
+            message: event.target.value
         });
     },
     updateForm: function(event) {
         event.preventDefault();
-        console.log(this.props);
-        console.log(this.state.message);
-        console.log(event.target.form.getElementsByTagName("textarea")[0].value);
+        //console.log(this.props);
+        //console.log(this.state.message);
     },
     render: function() {
         var R = React.DOM;
