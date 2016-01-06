@@ -1,17 +1,16 @@
-var R = React.DOM;
-var form = R.form;
-var input = R.input;
-var App = React.createClass({
+var Ticket_Messages_Form = React.createClass({
     displayName: 'CommentBox',
     handleChange: function(event) {
         console.log(event.target.value);
     },
-    updateForm: function(event){
-      event.preventDefault();
-      console.log("HI!");
-
+    updateForm: function(event) {
+        event.preventDefault();
+        console.log("HI!");
     },
     render: function() {
+        var R = React.DOM;
+        var form = R.form;
+        var input = R.input;
         return form({
             className: "commentForm"
         }, input({
@@ -24,7 +23,7 @@ var App = React.createClass({
         }), input({
             type: "submit",
             value: "Post",
-            onClick : this.updateForm
+            onClick: this.updateForm
         }));
     }
 });
