@@ -1,3 +1,4 @@
+console.log("Loading Mojo HelpDesk Extension by Collective Bias");
 var cb_mojo_ext = new CB_Mojo_Extension();
 target = document.querySelector('head > title');
 observer = new window.WebKitMutationObserver(function(mutations) {
@@ -18,12 +19,16 @@ observer = new window.WebKitMutationObserver(function(mutations) {
             var title = mutation.target.textContent;
             if (title.indexOf(cb_mojo_ext.title_selector) > 0 && title.indexOf("(#") > 0) {
                 var ticket_id = title.substring(title.indexOf("(#") + 2, title.lastIndexOf(")")).trim();
-                ReactDOM.render(React.createElement(Gmail_Sidebar), document.querySelector('[role="complementary"] .u5'));
-            } else {
-                if (cb_mojo_ext.$update_form != null) {
-                    cb_mojo_ext.$update_form.remove();
-                }
+                cb_mojo_ext.ticket_id = ticket_id;
+                ReactDOM.render(React.createElement(Gmail_Sidebar, {
+                    cb_mojo_ext: cb_mojo_ext
+                }), document.querySelector('[role="complementary"] .u5'));
             }
+            /*else {
+                           if (cb_mojo_ext.$update_form != null) {
+                               cb_mojo_ext.$update_form.remove();
+                           }
+                       }*/
         }
     });
 });
@@ -38,3 +43,4 @@ observer.observe(target, {
     characterData: true,
     childList: true
 });
+console.log("Finished Loading Mojo HelpDesk Extension by Collective Bias");

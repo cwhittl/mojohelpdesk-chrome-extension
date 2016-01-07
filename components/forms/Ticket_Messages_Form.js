@@ -6,65 +6,80 @@ var Ticket_Messages_Form = React.createClass({
         };
     },
     componentDidMount: function() {
-        API_Connector.get_messages(null, this.getMessages);
+        API_Connector.get_messages(this.props.cb_mojo_ext, this.getMessages);
     },
     updateForm: function(event) {
         event.preventDefault();
         console.log("HI!");
     },
     getMessages: function(messages_list) {
-        var mojo_domain = "collectivebias.mojohelpdesk.com";
+        var cb_mojo_ext = this.props.cb_mojo_ext;
+        var mojo_domain = cb_mojo_ext.mojo_domain;
         var R = React.DOM;
-        var lis = [];
-        var li = R.li;
-        var div = R.div;
-        var span = R.span;
-        $.each(messages_list, function(k, v) {
-            var comment = v.comment;
-            console.log(comment);
-            if (!Shared.isEmpty(comment.body)) {
+        var associated_users = [];
+        if (Shared.isEmpty(messages_list)) {
+            var message_html = R.ul({
+                className: "ticket_messages"
+            }, R.div({
+                className: "message_header"
+            }, R.li({}, "O-nay Essages-may")));
+        } else {
+            var x=0;
+            var message_html = R.ul({
+                className: "ticket_messages"
+            }, messages_list.map(function(comment_obj) {
+                var comment = comment_obj.comment;
+                if (Shared.isEmpty(comment.body)) {
+                    return null;
+                }
+                
                 var user_id = comment.user_id;
+                associated_users.push(user_id);
                 var is_private = ((comment.is_private == true) ? "is_private" : "is_public");
-                //associated_users.push(user_id);
-                //var message_date = Shared.getLocalTimeFromGMT(comment.created_on);
                 var message_date = new Date(comment.created_on);
-                lis.push(li({
-                    key: k,
-                    className: is_private
-                }, div({
+                return R.li({
+                    className: is_private,
+                    key: x++
+                }, R.div({
                     className: "message_header"
-                }, span({
+                }, R.span({
                     className: "user_pic",
                     "data-user_id": user_id
-                }), span({
+                }), R.span({
                     className: "user_info",
                     "data-user_id": user_id
-                }), span({
+                }), R.span({
                     className: "time_info"
-                }, "On " + message_date.toLocaleString()), span({
+                }, "On " + message_date.toLocaleString())), R.span({
                     dangerouslySetInnerHTML: {
                         __html: Shared.linkify(Shared.clean_message_body(comment.body, mojo_domain))
                     }
-                }))));
-            }
-        });
-        //console.log(lis);
-        //console.log(this);
+                }));
+            }));
+        }
         this.setState({
-            messages: lis
+            messages: message_html,
+            associated_users: associated_users
+        });
+    },
+    handleMinimize: function() {
+        this.state.associated_users.map(function(user_id) {
+            if (user_id != 0) {
+                API_Connector.get_user(user_id, cb_mojo_ext, function(user_obj) {
+                    var user = user_obj.user;
+                    Shared.update_user(user.id, user.first_name + " " + user.last_name, user.picture_url);
+                });
+            }
         });
     },
     render: function() {
-        var R = React.DOM;
-        var messages_elements = R.ul({
-            className: "messages"
-        }, this.state.messages);
         return React.createElement(Portlet, {
-            is_mac: true,
             disable_close: true,
+            disable_maximize: false,
             title: "Messages",
             draggable: false,
-            content: messages_elements
-        });
+            minimized: true,
+            handleMinimize: this.handleMinimize
+        }, this.state.messages);
     }
 });

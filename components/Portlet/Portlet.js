@@ -1,11 +1,7 @@
-var ALT = 18;
 var Portlet = React.createClass({
     displayName: "Portlet",
     getDefaultProps: function() {
-        var now = new Date();
         return {
-            key: now.getTime(),
-            altDown: false,
             draggable: false,
             title: "",
             closed: false,
@@ -14,72 +10,66 @@ var Portlet = React.createClass({
             disable_maximize: false,
             disable_close: false,
             disable_minimize: false,
-            content: null,
             handleMaximize: function(e) {
                 console.log("maximize not implemented");
             }
         }
     },
     getInitialState: function() {
+        var now = new Date();
         return {
-            altDown: false,
             draggable: this.props.draggable,
             title: this.props.title,
             closed: this.props.closed,
             minimized: this.props.minimized,
             maximize: this.props.maximize,
-            content: this.props.content
+            content: this.props.children,
+            key: Math.random().toString(36).substring(7) + now.getTime()
         }
     },
     componentDidMount: function() {
-        document.body.addEventListener('keydown', this.handleKeyDown);
-        document.body.addEventListener('keyup', this.handleKeyUp);
-        if(Modal){
+        if (Modal && this.props.disable_maximize != true) {
             var newdiv = document.createElement('div');
-            newdiv.setAttribute('id',this.get_key() + "-dialog-holder");
+            newdiv.setAttribute('id', this.getID() + "-dialog-holder");
             document.body.appendChild(newdiv);
         }
     },
     componentWillUnMount: function() {
-        document.body.removeEventListener('keydown', this.handleKeyDown);
-        document.body.removeEventListener('keyup', this.handleKeyUp);
-        if(Modal){
-            var child = document.getElementById(this.get_key() + "-dialog-holder");
+        if (Modal && this.props.disable_maximize != true) {
+            var child = document.getElementById(this.getID() + "-dialog-holder");
             document.body.removeChild(child);
         }
     },
-    handleKeyDown: function(e) {
-        if (e.keyCode === ALT) {
-            this.setState({
-                altDown: true
-            });
-        }
-    },
-    handleKeyUp: function(e) {
-        if (e.keyCode === ALT) {
-            this.setState({
-                altDown: false
-            });
-        }
-    },
     handleMaximize: function(e) {
+        this.setState({
+            maximized: (this.state.maximized) ? false : true
+        });
         if (Modal) {
+            var holder_key = "#" + this.getID() + "-dialog-holder";
+            var modal_portlet = React.createElement(Portlet, {
+                disable_close: false,
+                disable_minimize: true,
+                disable_maximize: true,
+                minimized: false,
+                title: this.state.title,
+                draggable: false
+            }, this.props.children);
             ReactDOM.render(React.createElement(Modal, {
-                children: this.state.content,
-                show: true
-            }), document.querySelector("#"+ this.get_key() + "-dialog-holder"));
+                show: true,
+                handleClose: function() {
+                    /*This is a hack to make sure another modal can be spawned, for some reason React
+                    is leaving a no script tag that keeps any Modals from firing again.
+                    */
+                    document.querySelector(holder_key).innerHTML = "";
+                },
+                children: modal_portlet
+            }), document.querySelector(holder_key));
         } else {
             console.log("Modal not included");
         }
         if (this.props.handleMaximize) {
             this.props.handleMaximize(e);
         }
-        /*if (this.state.altDown) {
-            // maximize
-            this.props.handleMaximize(e);
-        } else {
-            this.props.handleFullScreen(e);
-        }*/
     },
     handleMinimize: function(e) {
         this.setState({
@@ -109,7 +99,7 @@ var Portlet = React.createClass({
                 key: "titlebar-close",
                 onDoubleClick: this.handleNop,
                 onClick: this.handleClose,
-                className: this.get_key() + "-titlebar-close"
+                className: this.getID() + "-titlebar-close"
             }));
         }
         if (!this.props.disable_minimize == true) {
@@ -117,7 +107,7 @@ var Portlet = React.createClass({
                 onDoubleClick: this.handleNop,
                 onClick: this.handleMinimize,
                 className: "titlebar-minimize",
-                key: this.get_key() + "-titlebar-minimize"
+                key: this.getID() + "-titlebar-minimize"
             }));
         }
         if (!this.props.disable_maximize == true) {
@@ -125,12 +115,12 @@ var Portlet = React.createClass({
                 onDoubleClick: this.handleNop,
                 onClick: this.handleMaximize,
                 className: "titlebar-fullscreen",
-                key: this.get_key() + "-titlebar-fullscreen"
+                key: this.getID() + "-titlebar-fullscreen"
             }));
         }
         return React.createElement("div", {
             className: "titlebar-stoplight",
-            key: this.get_key() + "-titlebar-stoplight"
+            key: this.getID() + "-titlebar-stoplight"
         }, controls);
     },
     render_titlebar: function() {
@@ -139,19 +129,18 @@ var Portlet = React.createClass({
         });
         return React.createElement("div", {
             className: titlebar_classes,
-            key: this.get_key() + "-titlebar"
+            key: this.getID() + "-titlebar"
         }, React.createElement("div", {
             className: "titlebar-title",
-            key: this.get_key() + "-titlebar-title"
+            key: this.getID() + "-titlebar-title"
         }, this.state.title), this.render_controls());
     },
-    get_key: function() {
-        return "portlet-"+this.props.key;
+    getID: function() {
+        return "portlet-" + this.state.key;
     },
     render: function() {
         var classes = classNames('portlet', {
             'webkit-draggable': this.state.draggable,
-            'alt': this.state.altDown,
             "maximized": this.state.minimized
         });
         if (this.state.closed == false) {
@@ -160,11 +149,11 @@ var Portlet = React.createClass({
             if (this.state.minimized == false) {
                 results.push(React.createElement("div", {
                     className: "portlet-content",
-                    key: this.get_key() + "-content"
-                }, this.state.content));
+                    key: this.getID() + "-content"
+                }, this.props.children));
             }
             return (React.createElement("div", {
-                key: this.get_key(),
+                id: this.getID(),
                 className: classes
             }, results))
         }

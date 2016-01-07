@@ -15,7 +15,9 @@
 	display: block;
 	overflow: hidden;
 	line-height: 24px;
-	font-size: 15px;
+	font-size: 13px;
+	font-weight: bold;
+	padding-left: 5px;
 }
 .titlebar-stoplight {
 	float: right;

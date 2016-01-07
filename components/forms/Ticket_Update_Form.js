@@ -11,7 +11,7 @@ var Ticket_Update_Form = React.createClass({
         var R = React.DOM;
         var form = R.form;
         var input = R.input;
-        return content = form({
+        return form({
             className: "commentForm"
         }, input({
             type: "text",
@@ -37,15 +37,12 @@ var Ticket_Update_Form = React.createClass({
     },
     render: function() {
         return React.createElement(Portlet, {
-            key:"fred",
-            is_mac: true,
             disable_close: true,
-            disable_maximize: false,
+            disable_maximize: true,
             title: "Update",
             draggable: false,
             minimized: false,
-            content: this.render_content(),
             handleMaximize: this.handleMaximize
-        });
+        },this.render_content());
     }
 });

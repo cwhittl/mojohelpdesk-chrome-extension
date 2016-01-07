@@ -26,11 +26,10 @@ var Ticket_Description_Form = React.createClass({
             onClick: this.updateForm
         }));
         return React.createElement(Portlet, {
-            is_mac: true,
             disable_close: true,
+            key: 111,
             title: "Messages",
-            draggable: false,
-            content: content
-        });
+            draggable: false
+        },content);
     }
 });

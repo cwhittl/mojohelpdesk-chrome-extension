@@ -112,7 +112,10 @@ var Modal = React.createClass({
             setTimeout(() => {
                 this.setState({
                     show: false
-                })
+                });
+                if(this.props.handleClose){
+                    this.props.handleClose();
+                }
             }, this.props.transitionSpeed)
         })
     },

@@ -32,10 +32,8 @@ var Ticket_Private_Message_Form = React.createClass({
             onClick: this.updateForm
         }, "Send Message"));
         return React.createElement(Portlet, {
-            is_mac: true,
             title: "Send Private Message",
-            draggable: false,
-            content: content
-        });
+            draggable: false
+        },content);
     }
 });

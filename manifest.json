@@ -26,7 +26,8 @@
         "https://*.mojohelpdesk.com/*"
       ],
       "css": [
-        "components/Portlet/Portlet.css"
+        "components/Portlet/Portlet.css",
+        "components/forms/forms.css"
       ],
       "js": [
         "lib/jquery-2.1.4.min.js",
