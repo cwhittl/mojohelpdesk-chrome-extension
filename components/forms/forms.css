@@ -74,6 +74,9 @@
 .user_pic[data-user_id='0'] {
     background-image: url(chrome-extension://__MSG_@@extension_id__/icons/optimus.gif);
 }
+.user_info[data-user_id='0']::after {
+    content: "";
+}
 .user_info[data-user_id='0']::before {
     content: "Automated";
 }

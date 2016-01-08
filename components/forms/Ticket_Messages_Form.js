@@ -2,21 +2,26 @@ var Ticket_Messages_Form = React.createClass({
     displayName: 'Messages',
     getInitialState: function() {
         return {
-            messages: ''
+            message_count: 0,
+            messages: "",
+            associated_users: []
         };
     },
     componentDidMount: function() {
         API_Connector.get_messages(this.props.cb_mojo_ext, this.getMessages);
-    },
-    updateForm: function(event) {
-        event.preventDefault();
-        console.log("HI!");
+        setInterval(() => {
+            console.log("Getting Newest Messages");
+            API_Connector.get_messages(this.props.cb_mojo_ext, this.getMessages);
+        }, 60000);
     },
     getMessages: function(messages_list) {
+        console.log("messages");
+        messages_list = messages_list.reverse();
         var cb_mojo_ext = this.props.cb_mojo_ext;
         var mojo_domain = cb_mojo_ext.mojo_domain;
         var R = React.DOM;
         var associated_users = [];
+        var message_count = 0
         if (Shared.isEmpty(messages_list)) {
             var message_html = R.ul({
                 className: "ticket_messages"
@@ -24,7 +29,8 @@ var Ticket_Messages_Form = React.createClass({
                 className: "message_header"
             }, R.li({}, "O-nay Essages-may")));
         } else {
-            var x=0;
+            var x = 0;
+            message_count = messages_list.length;
             var message_html = R.ul({
                 className: "ticket_messages"
             }, messages_list.map(function(comment_obj) {
@@ -32,7 +38,6 @@ var Ticket_Messages_Form = React.createClass({
                 if (Shared.isEmpty(comment.body)) {
                     return null;
                 }
-                
                 var user_id = comment.user_id;
                 associated_users.push(user_id);
                 var is_private = ((comment.is_private == true) ? "is_private" : "is_public");
@@ -58,11 +63,12 @@ var Ticket_Messages_Form = React.createClass({
             }));
         }
         this.setState({
+            title: "Messages (" + message_count + ")",
             messages: message_html,
             associated_users: associated_users
         });
     },
-    handleMinimize: function() {
+    getUserInfo: function() {
         this.state.associated_users.map(function(user_id) {
             if (user_id != 0) {
                 API_Connector.get_user(user_id, cb_mojo_ext, function(user_obj) {
@@ -72,13 +78,24 @@ var Ticket_Messages_Form = React.createClass({
             }
         });
     },
+    handleMaximize: function() {
+        this.getUserInfo();
+    },
+    handleMinimize: function() {
+        this.getUserInfo();
+    },
     render: function() {
+        console.log(this.state.title);
+        if (this.state.messages == "") {
+            return null;
+        }
         return React.createElement(Portlet, {
             disable_close: true,
             disable_maximize: false,
-            title: "Messages",
+            title: this.state.title,
             draggable: false,
             minimized: true,
+            handleMaximize: this.handleMaximize,
             handleMinimize: this.handleMinimize
         }, this.state.messages);
     }

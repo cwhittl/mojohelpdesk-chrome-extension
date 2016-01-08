@@ -24,11 +24,6 @@ observer = new window.WebKitMutationObserver(function(mutations) {
                     cb_mojo_ext: cb_mojo_ext
                 }), document.querySelector('[role="complementary"] .u5'));
             }
-            /*else {
-                           if (cb_mojo_ext.$update_form != null) {
-                               cb_mojo_ext.$update_form.remove();
-                           }
-                       }*/
         }
     });
 });

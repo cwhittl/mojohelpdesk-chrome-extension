@@ -133,7 +133,7 @@ var Portlet = React.createClass({
         }, React.createElement("div", {
             className: "titlebar-title",
             key: this.getID() + "-titlebar-title"
-        }, this.state.title), this.render_controls());
+        }, this.props.title), this.render_controls());
     },
     getID: function() {
         return "portlet-" + this.state.key;
