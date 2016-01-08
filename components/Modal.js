@@ -1,3 +1,9 @@
+/*
+Original Concept was from
+https://github.com/Legitcode/modal
+
+Retooled to be completly non-jsx and brought the default styles inside the class 
+*/
 var Modal = React.createClass({
     displayName: "Modal",
     getDefaultProps: function() {
@@ -52,26 +58,6 @@ var Modal = React.createClass({
         }
         return styles;
     },
-    /*constructor(props) {
-        super()
-        this.hideOnOuterClick = this.hideOnOuterClick.bind(this)
-        this.fadeIn = this.fadeIn.bind(this)
-        this.fadeOut = this.fadeOut.bind(this)
-        let opacity = 0,
-            display = 'block',
-            visibility = 'hidden';
-        if (props.show) {
-            opacity = 1;
-            display = 'block';
-            visibility = 'visible'
-        }
-        this.state = {
-            opacity,
-            display,
-            visibility,
-            show: props.show
-        };
-    }*/
     hideOnOuterClick: function(event) {
         if (this.props.closeOnOuterClick === false) return
         if (event.target.dataset.modal) {
@@ -80,7 +66,6 @@ var Modal = React.createClass({
                 this.props.onClose(event);
             }
         }
-        //this.props.onClose(event)
     },
     componentWillReceiveProps: function(props) {
         if (this.props.show != props.show) {

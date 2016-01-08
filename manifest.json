@@ -9,7 +9,7 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "options_page": "options.js",
+  "options_page": "options/options.html",
   "web_accessible_resources": ["components/Portlet/stoplight.png","icons/icon19.png","icons/optimus.gif","icons/default_user.png"],
   "permissions": [
     "storage",
@@ -41,7 +41,6 @@
         "components/forms/Ticket_Private_Message_Form.js",
         "components/forms/Ticket_Update_Form.js",
         "components/forms/Ticket_Messages_Form.js",
-        "components/forms/Ticket_Description_Form.js",
         "components/Gmail_Sidebar.js",
         "lib/CB_Mojo_Extension.js",
         "index.js"

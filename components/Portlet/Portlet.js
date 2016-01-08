@@ -1,3 +1,8 @@
+/*
+Original Concept came from 
+https://github.com/tgdn/titlebar-react
+Retooled to be self contained for minimize and maximized
+*/
 var Portlet = React.createClass({
     displayName: "Portlet",
     getDefaultProps: function() {
