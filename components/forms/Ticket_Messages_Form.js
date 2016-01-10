@@ -15,20 +15,13 @@ var Ticket_Messages_Form = React.createClass({
         }, 60000);
     },
     getMessages: function(messages_list) {
-        console.log("messages");
-        messages_list = messages_list.reverse();
-        var cb_mojo_ext = this.props.cb_mojo_ext;
-        var mojo_domain = cb_mojo_ext.mojo_domain;
         var R = React.DOM;
-        var associated_users = [];
         var message_count = 0
-        if (Shared.isEmpty(messages_list)) {
-            var message_html = R.ul({
-                className: "ticket_messages"
-            }, R.div({
-                className: "message_header"
-            }, R.li({}, "O-nay Essages-may")));
-        } else {
+        if (!Shared.isEmpty(messages_list) && messages_list.length > 0) {
+            messages_list = messages_list.reverse();
+            var cb_mojo_ext = this.props.cb_mojo_ext;
+            var mojo_domain = cb_mojo_ext.mojo_domain;
+            var associated_users = [];
             var x = 0;
             message_count = messages_list.length;
             var message_html = R.ul({
@@ -61,6 +54,12 @@ var Ticket_Messages_Form = React.createClass({
                     }
                 }));
             }));
+        } else {
+            var message_html = R.ul({
+                className: "ticket_messages"
+            }, R.div({
+                className: "message_header"
+            }, R.li({}, "O-nay Essages-may")));
         }
         this.setState({
             title: "Messages (" + message_count + ")",

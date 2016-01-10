@@ -1,107 +1,52 @@
 var Options_Form = React.createClass({
     displayName: 'Options_Form',
     getInitialState: function() {
+        console.log(this.props.cb_mojo_ext);
         return {
-            api_key: null,
-            debug_mode: false,
-            mojo_domain: "",
-            use_custom_fields: false,
-            custom_fields_json: {
-                "custom_field_sub_category": {
-                    "dependent_to": "ticket_type_id",
-                    "field_type": "select",
-                    "options": {
-                        "66168": {
-                            "enhancement request/feedback": "Enhancement Request/feedback",
-                            "how to/training issue": "How To/training Issue",
-                            "issue": "Issue",
-                            "user error": "User Error"
-                        },
-                        "66169": {
-                            "application issue or failure": "Application Issue or Failure",
-                            "hardware issue or failure": "Hardware Issue or Failure",
-                            "network issue or failure": "Network Issue or Failure"
-                        },
-                        "66170": {
-                            "bug": "Bug",
-                            "duplicate": "Duplicate",
-                            "known error": "Known Error"
-                        },
-                        "66171": {
-                            "account/identity management task": "Account/identity Management Task",
-                            "enhancement task": "Enhancement Task",
-                            "enhancement task ": "Enhancement Task",
-                            "support/training task": "Support/training Task"
-                        }
-                    },
-                    "pretty_name": "Sub Category"
-                }
-            },
-            email_address: "",
-            mojo_agent_id: "",
-            title_selector: ""
+            api_key: this.props.cb_mojo_ext.api_key,
+            debug_mode: this.props.cb_mojo_ext.debug_mode,
+            mojo_domain: this.props.cb_mojo_ext.mojo_domain,
+            use_custom_fields: this.props.cb_mojo_ext.use_custom_fields,
+            custom_fields_json: this.props.cb_mojo_ext.custom_fields_json,
+            email_address: this.props.cb_mojo_ext.email_address,
+            mojo_agent_id: this.props.cb_mojo_ext.mojo_domain,
+            title_selector: this.props.cb_mojo_ext.title_selector
         };
     },
     componentDidMount: function() {},
     updateForm: function(event) {
+        console.log("update form");
         event.preventDefault();
-        console.log("HI!");
-        /*
         chrome.storage.sync.set({
-                api_key: api_key,
-                debug_mode: debug_mode,
-                mojo_domain: mojo_domain,
-                use_custom_fields: use_custom_fields,
-                custom_fields_json: custom_fields_json,
-                email_address: email_address,
-                mojo_agent_id: mojo_agent_id,
-                title_selector: title_selector
-            }, function() {
-                // Update status to let user know options were saved.
-                $status.html('Options saved.');
-                setTimeout(function() {
-                    $status.html('');
-                }, 750);
-            });
-	*/
-    },
-    createFieldSet: function(in_props) {
-        var default_props = {
-            type: "text",
-            validation_pattern: "",
-            placeholder: "Please Enter " + in_props.label_text
-        }
-        var props = Shared.merge_options(default_props, in_props);
-        var R = React.DOM;
-        var label = R.label({
-            htmlFor: props.id
-        }, props.label_text);
-        return R.fieldset({
-            className: "form-group",
-            key: "group-" + props.id,
-            id: "group-" + props.id
-        }, label, R.input({
-            className: "form-control",
-            id: props.id,
-            key: props.id,
-            type: props.type,
-            pattern: props.validation_pattern,
-            placeholder: props.placeholder,
-            onChange: props.changeHandler
-        }));
+            api_key: this.state.api_key,
+            debug_mode: this.state.debug_mode,
+            mojo_domain: this.state.mojo_domain,
+            use_custom_fields: this.state.use_custom_fields,
+            custom_fields_json: this.state.custom_fields_json,
+            email_address: this.state.email_address,
+            title_selector: this.state.title_selector
+        });
+        // Update status to let user know options were saved.
+        this.state.status = "Options saved.";
+        setTimeout(() => {
+            this.state.status = "";
+        }, 10000);
     },
     handleInputChange: function(event) {
-        console.log(event);
-        if (event.target.validity.valid) {
-            console.log("good");
-            var stateObject = function() {
-                returnObj = {};
-                returnObj[this.target.id] = this.target.value;
-                return returnObj;
-            }.bind(event)();
-            this.setState(stateObject);
-        }
-        console.log(this.state);
+        var stateObject = function() {
+            returnObj = {};
+            returnObj[this.target.id] = this.target.value;
+            return returnObj;
+        }.bind(event)();
+        this.setState(stateObject);
+    },
+    handleCheckboxChange: function(event) {
+        var stateObject = function() {
+            returnObj = {};
+            returnObj[this.target.id] = this.target.checked;
+            return returnObj;
+        }.bind(event)();
+        this.setState(stateObject);
     },
     render_content: function(event) {
         var R = React.DOM;
@@ -109,56 +54,110 @@ var Options_Form = React.createClass({
         var input = R.input;
         var div = R.div;
         var img = R.img;
-        var domain_fieldset = this.createFieldSet({
-            id: "mojo_domain",
+        var domain_fieldset = Shared.createFieldSet({
             label_text: "Mojo Domain (no http(s):// just the domain)",
+            id: "mojo_domain",
+        }, R.input({
+            className: "form-control",
+            id: "mojo_domain",
+            key: "mojo_domain",
+            type: "text",
+            placeholder: "Please Enter Mojo Domain",
             value: this.state.mojo_domain,
-            placeholder: "Please Enter Your Mojo Domain",
-            help_text: "",
-            message: "",
-            validation_pattern: "^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\\\.[a-zA-Z]{2,})+$",
-            changeHandler: this.handleInputChange
-        });
-        var email_fieldset = this.createFieldSet({
+            onChange: this.handleInputChange
+        }));
+        var email_fieldset = Shared.createFieldSet({
+            label_text: "Email Address associated with your Mojo Helpdesk Account",
             id: "email_address",
-            label_text: "Email Address",
+        }, R.input({
+            className: "form-control",
+            id: "email_address",
+            key: "email_address",
+            type: "email",
+            placeholder: "Please Enter Your Mojo Email Address",
             value: this.state.email_address,
-            placeholder: "Please Enter The Email Address Associated With You Mojo Account",
-            help_text: "",
-            type: "url",
-            message: "",
-            changeHandler: this.handleInputChange
-        });
-        var api_fieldset = this.createFieldSet({
-            id: "api_key",
+            onChange: this.handleInputChange
+        }));
+        var api_fieldset = Shared.createFieldSet({
             label_text: "Your Personal Mojo Helpdesk API Key",
+            id: "api_key",
+        }, R.input({
+            className: "form-control",
+            id: "api_key",
+            key: "api_key",
+            type: "text",
+            placeholder: "Please Enter Your Personal Mojo Helpdesk API Key",
             value: this.state.api_key,
-            help_text: "",
-            message: "",
-            changeHandler: this.handleInputChange
-        });
-        var custom_fields_fieldset = this.createFieldSet({
-            id: "use_custom_fields",
+            onChange: this.handleInputChange
+        }));
+        var title_selector_fieldset = Shared.createFieldSet({
+            label_text: "HelpDesk Ticket Subject Regext",
+            id: "title_selector",
+        }, R.input({
+            className: "form-control",
+            id: "title_selector",
+            key: "title_selector",
+            type: "text",
+            placeholder: "HelpDesk Ticket Subject Regext",
+            value: this.state.title_selector,
+            onChange: this.handleInputChange
+        }));
+        var custom_fields_fieldset = Shared.createFieldSet({
             label_text: "Use Custom Fields",
-            value: this.state.use_custom_fields,
-            help_text: "",
+            id: "use_custom_fields",
+        }, R.input({
+            className: "form-control",
+            id: "use_custom_fields",
+            key: "use_custom_fields",
             type: "checkbox",
-            message: "",
-            changeHandler: this.handleInputChange
-        });
+            checked: this.state.use_custom_fields,
+            onChange: this.handleCheckboxChange
+        }));
+        var custom_fields_json_fieldset = Shared.createFieldSet({
+            label_text: "Custom Fields JSON",
+            id: "custom_fields_json",
+        }, R.textarea({
+            className: "form-control",
+            id: "custom_fields_json",
+            key: "custom_fields_json",
+            value: JSON.stringify(this.state.custom_fields_json),
+            placeholder: "Custom Fields JSON",
+            onChange: this.handleInputChange
+        }));
+        var debug_mode_fieldset = Shared.createFieldSet({
+            label_text: "Use Debug Mode",
+            id: "debug_mode",
+        }, R.input({
+            className: "form-control",
+            id: "debug_mode",
+            key: "debug_mode",
+            type: "checkbox",
+            checked: this.state.debug_mode,
+            onChange: this.handleCheckboxChange
+        }));
         var submit = input({
             type: "submit",
+            key:"submit",
             value: "Update Options",
             onClick: this.updateForm
         })
         var controls = [];
+        controls.push(R.h4({
+            key:"status",
+            className: "Status"
+        }, this.state.status));
         controls.push(domain_fieldset);
-        if (this.state.mojo_domain == "") {} else {
+        if (!Shared.isEmpty(this.state.mojo_domain) && Shared.isValidDomain(this.state.mojo_domain)) {
             controls.push(email_fieldset);
             controls.push(api_fieldset);
+            controls.push(title_selector_fieldset);
             controls.push(custom_fields_fieldset);
+            if (this.state.use_custom_fields == true) {
+                controls.push(custom_fields_json_fieldset);
+            }
+            controls.push(debug_mode_fieldset);
             controls.push(submit);
-        }
+        } else {}
         return form({
             className: "optionsForm"
         }, div({
@@ -171,7 +170,11 @@ var Options_Form = React.createClass({
         return this.render_content();
     }
 });
-ReactDOM.render(React.createElement(Options_Form), document.querySelector('#container'));
+new CB_Mojo_Extension(function(cb_mojo_ext) {
+    ReactDOM.render(React.createElement(Options_Form, {
+        cb_mojo_ext: cb_mojo_ext
+    }), document.querySelector('#container'));
+});
 /*<div style="text-align:center">
         <table style="width:75%;margin-left:auto;margin-right:auto;">
             <tr>

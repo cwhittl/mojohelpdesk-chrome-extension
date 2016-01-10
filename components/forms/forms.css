@@ -104,6 +104,12 @@
     clear: both;
 }
 
+.ticket_info {
+    max-height: 100px;
+    overflow-y: scroll;
+    font-size: 12px;
+}
+
 
 /** Directed At All Modes **/
 

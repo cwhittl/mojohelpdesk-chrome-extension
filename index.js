@@ -20,20 +20,25 @@ function CB_Mojo_Extension_Loader() {
                     cb_mojo_ext.enhance_mojo_ui(cb_mojo_ext);
                 } else {
                     var title = mutation.target.textContent;
-                    if (title.indexOf(cb_mojo_ext.title_selector) > 0 && title.indexOf("(#") > 0) {
-                        if (cb_mojo_ext.access_key == "" || cb_mojo_ext.email_address == "") {
-                            sidebar = React.createElement("div", {
-                                className: "error"
-                            }, "Please Configure");
-                            console.log("Error Loading Mojo HelpDesk Extension by Collective Bias - Missing Options");
-                        } else {
-                            var ticket_id = title.substring(title.indexOf("(#") + 2, title.lastIndexOf(")")).trim();
-                            cb_mojo_ext.ticket_id = ticket_id;
-                            sidebar = React.createElement(Gmail_Sidebar, {
-                                cb_mojo_ext: cb_mojo_ext
-                            });
+                    var re = new RegExp(cb_mojo_ext.title_selector);
+                    var title_search = title.match(re);
+                    if (title_search != null) {
+                        var ticket_id = title_search[title_search.length - 1]
+                        console.log(ticket_id);
+                        if (!Shared.isEmpty(ticket_id)) {
+                            if (cb_mojo_ext.access_key == "" || cb_mojo_ext.email_address == "") {
+                                sidebar = React.createElement("div", {
+                                    className: "error"
+                                }, "Please Configure");
+                                console.log("Error Loading Mojo HelpDesk Extension by Collective Bias - Missing Options");
+                            } else {
+                                cb_mojo_ext.ticket_id = ticket_id;
+                                sidebar = React.createElement(Gmail_Sidebar, {
+                                    cb_mojo_ext: cb_mojo_ext
+                                });
+                            }
+                            ReactDOM.render(sidebar, document.querySelector('[role="complementary"] .u5'));
                         }
-                        ReactDOM.render(sidebar, document.querySelector('[role="complementary"] .u5'));
                     }
                 }
             });
@@ -56,14 +61,17 @@ function CB_Mojo_Extension_Loader() {
             if (cb_mojo_ext.debug_mode == true) {
                 console.log(response);
             } // server response
-            var queues = {};
+            var queues = [];
             $.each(response, function() {
                 $.each(this, function(k, v) {
-                    queues[v.id] = v.name;
+                    queues.push({
+                        key: v.id,
+                        value: v.name
+                    });
                 });
             });
             cb_mojo_ext.queues = queues;
-            if (cb_mojo_ext.mojo_agent_id != "") {
+            if (cb_mojo_ext.mojo_agent_id == "") {
                 API_Connector.get_agent_id(cb_mojo_ext, function(response) {
                     if (cb_mojo_ext.debug_mode == true) {
                         console.log(response);
