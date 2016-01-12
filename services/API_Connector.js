@@ -15,7 +15,6 @@ API_Connector.get_agent_id = function(cb_mojo_ext, success_function) {
     $.getJSON("https://mysupport.mojohelpdesk.com/api/users/get_by_email.json?email=" + cb_mojo_ext.email_address + "&access_key=" + cb_mojo_ext.api_key, success_function);
 }
 API_Connector.send_private_message = function(react_element, cb_mojo_ext, onsuccess) {
-    console.log("got to pm");
     var state = react_element.state;
     //var ticket_id = event.data("ticket_id");
     var XMLData = "<comment>";
