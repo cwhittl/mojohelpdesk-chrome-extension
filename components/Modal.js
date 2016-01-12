@@ -38,7 +38,7 @@ var Modal = React.createClass({
             width: '400px',
             position: 'relative',
             margin: '10% auto',
-            padding: '5px 20px 13px 20px',
+            padding: '5px',
             background: '#fff'
         }
         styles.close = {

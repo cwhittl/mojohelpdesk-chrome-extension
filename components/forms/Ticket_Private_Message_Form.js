@@ -5,6 +5,16 @@ var Ticket_Private_Message_Form = React.createClass({
             message: ''
         };
     },
+    handleMaximize: function() {
+        if(this.props.handleMaximize){
+            this.props.handleMaximize(event);
+        }
+    },
+    handleMinimize: function(event) {
+        if(this.props.handleMinimize){
+            this.props.handleMinimize(event);
+        }
+    },
     handleChange: function(event) {
         this.setState({
             message: event.target.value
@@ -32,8 +42,11 @@ var Ticket_Private_Message_Form = React.createClass({
             onClick: this.updateForm
         }, "Send Message"));
         return React.createElement(Portlet, {
-            title: "Send Private Message",
-            draggable: false
+            title: "Send PM",
+            disable_close: true,
+            draggable: false,
+            handleMaximize: this.handleMaximize,
+            handleMinimize: this.handleMinimize
         },content);
     }
 });

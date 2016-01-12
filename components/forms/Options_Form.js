@@ -2,32 +2,44 @@ var Options_Form = React.createClass({
     displayName: 'Options_Form',
     getInitialState: function() {
         console.log(this.props.cb_mojo_ext);
+        var custom_fields_json = this.props.cb_mojo_ext.custom_fields_json;
+        if (Shared.isObject(this.props.cb_mojo_ext.custom_fields_json)) {
+            custom_fields_json = JSON.stringify(this.props.cb_mojo_ext.custom_fields_json);
+        }
         return {
             api_key: this.props.cb_mojo_ext.api_key,
             debug_mode: this.props.cb_mojo_ext.debug_mode,
             mojo_domain: this.props.cb_mojo_ext.mojo_domain,
             use_custom_fields: this.props.cb_mojo_ext.use_custom_fields,
-            custom_fields_json: this.props.cb_mojo_ext.custom_fields_json,
+            custom_fields_json: custom_fields_json,
             email_address: this.props.cb_mojo_ext.email_address,
             mojo_agent_id: this.props.cb_mojo_ext.mojo_domain,
-            title_selector: this.props.cb_mojo_ext.title_selector
+            title_selector: this.props.cb_mojo_ext.title_selector,
+            reset_options: false
         };
     },
     componentDidMount: function() {},
     updateForm: function(event) {
         console.log("update form");
         event.preventDefault();
-        chrome.storage.sync.set({
-            api_key: this.state.api_key,
-            debug_mode: this.state.debug_mode,
-            mojo_domain: this.state.mojo_domain,
-            use_custom_fields: this.state.use_custom_fields,
-            custom_fields_json: this.state.custom_fields_json,
-            email_address: this.state.email_address,
-            title_selector: this.state.title_selector
-        });
+        var status = "Options saved.";
+        if (this.state.reset_options == true) {
+            chrome.storage.sync.clear();
+            this.replaceState({});
+            status = "Options Reset, may God have mercy on your soul.";
+        } else {
+            chrome.storage.sync.set({
+                api_key: this.state.api_key,
+                debug_mode: this.state.debug_mode,
+                mojo_domain: this.state.mojo_domain,
+                use_custom_fields: this.state.use_custom_fields,
+                custom_fields_json: JSON.parse(this.state.custom_fields_json),
+                email_address: this.state.email_address,
+                title_selector: this.state.title_selector
+            });
+        }
         // Update status to let user know options were saved.
-        this.state.status = "Options saved.";
+        this.state.status = status;
         setTimeout(() => {
             this.state.status = "";
         }, 10000);
@@ -55,7 +67,7 @@ var Options_Form = React.createClass({
         var div = R.div;
         var img = R.img;
         var domain_fieldset = Shared.createFieldSet({
-            label_text: "Mojo Domain (no http(s):// just the domain)",
+            label_text: "Please enter your Mojo Helpdesk domain (no http(s):// just the domain)",
             id: "mojo_domain",
         }, R.input({
             className: "form-control",
@@ -67,31 +79,31 @@ var Options_Form = React.createClass({
             onChange: this.handleInputChange
         }));
         var email_fieldset = Shared.createFieldSet({
-            label_text: "Email Address associated with your Mojo Helpdesk Account",
+            label_text: "Please enter the email address you are associated with your Mojo Helpdesk account",
             id: "email_address",
         }, R.input({
             className: "form-control",
             id: "email_address",
             key: "email_address",
             type: "email",
-            placeholder: "Please Enter Your Mojo Email Address",
+            placeholder: "Please enter your Mojo email address",
             value: this.state.email_address,
             onChange: this.handleInputChange
         }));
         var api_fieldset = Shared.createFieldSet({
-            label_text: "Your Personal Mojo Helpdesk API Key",
+            label_text: "Your Mojo Helpdesk API key",
             id: "api_key",
         }, R.input({
             className: "form-control",
             id: "api_key",
             key: "api_key",
             type: "text",
-            placeholder: "Please Enter Your Personal Mojo Helpdesk API Key",
+            placeholder: "Please enter your personal Mojo Helpdesk API key",
             value: this.state.api_key,
             onChange: this.handleInputChange
         }));
         var title_selector_fieldset = Shared.createFieldSet({
-            label_text: "HelpDesk Ticket Subject Regext",
+            label_text: "Please enter Regex to retrieve the ticket number from the subject of Mojo emails",
             id: "title_selector",
         }, R.input({
             className: "form-control",
@@ -103,7 +115,7 @@ var Options_Form = React.createClass({
             onChange: this.handleInputChange
         }));
         var custom_fields_fieldset = Shared.createFieldSet({
-            label_text: "Use Custom Fields",
+            label_text: "Are you using custom fields?",
             id: "use_custom_fields",
         }, R.input({
             className: "form-control",
@@ -120,12 +132,12 @@ var Options_Form = React.createClass({
             className: "form-control",
             id: "custom_fields_json",
             key: "custom_fields_json",
-            value: JSON.stringify(this.state.custom_fields_json),
+            value: this.state.custom_fields_json,
             placeholder: "Custom Fields JSON",
             onChange: this.handleInputChange
         }));
         var debug_mode_fieldset = Shared.createFieldSet({
-            label_text: "Use Debug Mode",
+            label_text: "Enable debug mode?",
             id: "debug_mode",
         }, R.input({
             className: "form-control",
@@ -135,15 +147,29 @@ var Options_Form = React.createClass({
             checked: this.state.debug_mode,
             onChange: this.handleCheckboxChange
         }));
+        var reset_options_fieldset = Shared.createFieldSet({
+            label_text: "Reset All Options",
+            id: "reset_options",
+            style: {
+                backgroundColor: "red"
+            }
+        }, R.input({
+            className: "form-control",
+            id: "reset_options",
+            key: "reset_options",
+            type: "checkbox",
+            checked: this.state.reset_options,
+            onChange: this.handleCheckboxChange
+        }));
         var submit = input({
             type: "submit",
-            key:"submit",
+            key: "submit",
             value: "Update Options",
             onClick: this.updateForm
         })
         var controls = [];
         controls.push(R.h4({
-            key:"status",
+            key: "status",
             className: "Status"
         }, this.state.status));
         controls.push(domain_fieldset);
@@ -156,15 +182,17 @@ var Options_Form = React.createClass({
                 controls.push(custom_fields_json_fieldset);
             }
             controls.push(debug_mode_fieldset);
+            controls.push(reset_options_fieldset);
             controls.push(submit);
         } else {}
         return form({
             className: "optionsForm"
         }, div({
-            className: ""
+            className: "options_header"
         }, "Welcome to The Mojo HelpDesk Extension by Collective Bias"), img({
+            className: "options_logo",
             src: "../../icons/icon128.png"
-        }), controls);
+        }), R.hr({}), controls);
     },
     render: function() {
         return this.render_content();
@@ -175,123 +203,3 @@ new CB_Mojo_Extension(function(cb_mojo_ext) {
         cb_mojo_ext: cb_mojo_ext
     }), document.querySelector('#container'));
 });
-/*<div style="text-align:center">
-        <table style="width:75%;margin-left:auto;margin-right:auto;">
-            <tr>
-                <td style="width:50%;">
-                    <h1>Welcome to The Mojo HelpDesk Extension by Collective Bias</h1>
-                </td>
-                <td>
-                    <img src="../../icons/icon128.png">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label>
-                        Please Enter Your Mojo Helpdesk Domain (no http(s):// just the domain)
-                    </label>
-                </td>
-                <td>
-                    <input type="textbox" id="mojo_domain" style="width:100%"  placeholder="Mojo Helpdesk Domain To Continue"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" class='help_tags'>
-                    <a  href="#">How Do I Get The Domain?</a>
-                    <img src="images/Domain.png">
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td>
-                    <label>
-                        Please Enter Your Email Address
-                    </label>
-                </td>
-                <td>
-                    <input type="textbox" id="email_address" style="width:100%"/>
-                    <input type="hidden" id="mojo_agent_id" />
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td>
-                    <label>
-                        Please Enter Your Personal Mojo Helpdesk API Key
-                    </label>
-                </td>
-                <td>
-                    <input type="textbox" id="api_key" style="width:100%"/>
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td colspan="2" class='help_tags'>
-                    <a href="#">How Do I Get My API Key?</a>
-                    <img src="images/ProfilePage.png">
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td>
-                    <label>
-                        Please Something Unique in Email Subject To Determine A HelpDesk Ticket
-                    </label>
-                </td>
-                <td>
-                    <input type="textbox" id="title_selector" style="width:100%"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" class='help_tags dependent_on_domain'>
-                    <a href="#">How Do I Set Up The Email Title?</a>
-                    <div>
-                        You need to add (#{{ticket.id}}) somewhere in the title of ALL the email messages as well as something unique. See below for an example.
-                    </div>
-                    <img src="images/EmailTitles.png">
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td>
-                    <label>
-                        Use Custom Fields
-                    </label>
-                </td>
-                <td>
-                    <input type="checkbox" id="use_custom_fields" >
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td class='custom_fields_json_container' >
-                    <label>
-                        Custom Fields JSON
-                    </label>
-                </td>
-                <td class='custom_fields_json_container'>
-                    <textarea id="custom_fields_json" style="width:100%;min-height:200px"></textarea>
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td>
-                    <label>
-                        Enable Debug Mode
-                    </label>
-                </td>
-                <td>
-                    <input type="checkbox" id="debug_mode">
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td>
-                    <label style="color:red">
-                        Reset All Options (Last resort)
-                    </label>
-                </td>
-                <td>
-                    <input type="checkbox" id="reset_options" style="color:red">
-                </td>
-            </tr>
-            <tr class='dependent_on_domain'>
-                <td colspan="2"><button id="save" style="width:100%">Update Options</button></td>
-            </tr>
-        </table>
-        <div id="status"></div>
-
-    </div>
-    */

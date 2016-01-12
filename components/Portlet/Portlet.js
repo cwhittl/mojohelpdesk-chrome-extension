@@ -49,26 +49,33 @@ var Portlet = React.createClass({
         this.setState({
             maximized: (this.state.maximized) ? false : true
         });
+        var that = this;
         if (Modal) {
-            var holder_key = "#" + this.getID() + "-dialog-holder";
-            var modal_portlet = React.createElement(Portlet, {
+            var holder_id = "#" + this.getID() + "-dialog-holder";
+            var modal = React.createElement(Modal, {
+                id: this.getID(),
+                show: true,
+                handleClose: function(event) {
+                    /*This is a hack to make sure another modal can be spawned, for some reason React
+                    is leaving a no script tag that keeps any Modals from firing again.
+                    */
+                    document.querySelector(holder_id).innerHTML = "";
+                }
+            }, React.createElement(Portlet, {
                 disable_close: false,
                 disable_minimize: true,
                 disable_maximize: true,
                 minimized: false,
                 title: this.state.title,
-                draggable: false
-            }, this.props.children);
-            ReactDOM.render(React.createElement(Modal, {
-                show: true,
-                handleClose: function() {
-                    /*This is a hack to make sure another modal can be spawned, for some reason React
-                    is leaving a no script tag that keeps any Modals from firing again.
-                    */
-                    document.querySelector(holder_key).innerHTML = "";
+                handleClose: function(event) {
+                    //Yes I know how hacky this is, wanna fight about it?
+                    //I couldn't figure out how to trigger a modal close from outsite.
+                    jQuery('[data-modal="true"]').click();
+                    //modal.props.handleClose(event);
                 },
-                children: modal_portlet
-            }), document.querySelector(holder_key));
+                draggable: false
+            }, this.props.children));
+            ReactDOM.render(modal, document.querySelector(holder_id));
         } else {
             console.log("Modal not included");
         }
@@ -88,6 +95,8 @@ var Portlet = React.createClass({
         this.setState({
             closed: (this.state.closed) ? false : true
         });
+        console.log("got here");
+        console.log(this.props);
         if (this.props.handleClose) {
             this.props.handleClose(e);
         }
@@ -101,10 +110,10 @@ var Portlet = React.createClass({
         var controls = [];
         if (!this.props.disable_close == true) {
             controls.push(React.createElement("div", {
-                key: "titlebar-close",
+                className: "titlebar-close",
                 onDoubleClick: this.handleNop,
                 onClick: this.handleClose,
-                className: this.getID() + "-titlebar-close"
+                key: this.getID() + "-titlebar-close"
             }));
         }
         if (!this.props.disable_minimize == true) {
@@ -144,7 +153,7 @@ var Portlet = React.createClass({
         return "portlet-" + this.state.key;
     },
     render: function() {
-        var classes = classNames('portlet', {
+        var classes = classNames('portlet', this.props.id, {
             'webkit-draggable': this.state.draggable,
             "maximized": this.state.minimized
         });

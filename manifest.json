@@ -41,6 +41,7 @@
         "components/forms/Ticket_Private_Message_Form.js",
         "components/forms/Ticket_Update_Form.js",
         "components/forms/Ticket_Messages_Form.js",
+        "components/forms/Mojo_Custom_Fields_Form.js",
         "components/Gmail_Sidebar.js",
         "lib/CB_Mojo_Extension.js",
         "index.js"

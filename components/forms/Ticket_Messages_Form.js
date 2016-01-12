@@ -12,7 +12,7 @@ var Ticket_Messages_Form = React.createClass({
         setInterval(() => {
             console.log("Getting Newest Messages");
             API_Connector.get_messages(this.props.cb_mojo_ext, this.getMessages);
-        }, 60000);
+        }, 30000);
     },
     getMessages: function(messages_list) {
         var R = React.DOM;
@@ -68,23 +68,30 @@ var Ticket_Messages_Form = React.createClass({
         });
     },
     getUserInfo: function() {
-        this.state.associated_users.map(function(user_id) {
-            if (user_id != 0) {
-                API_Connector.get_user(user_id, cb_mojo_ext, function(user_obj) {
-                    var user = user_obj.user;
-                    Shared.update_user(user.id, user.first_name + " " + user.last_name, user.picture_url);
-                });
-            }
-        });
+        if (typeof this.state.associated_users != "undefined") {
+            this.state.associated_users.map(function(user_id) {
+                if (user_id != 0) {
+                    API_Connector.get_user(user_id, cb_mojo_ext, function(user_obj) {
+                        var user = user_obj.user;
+                        Shared.update_user(user.id, user.first_name + " " + user.last_name, user.picture_url);
+                    });
+                }
+            });
+        }
     },
     handleMaximize: function() {
         this.getUserInfo();
+        if (this.props.handleMaximize) {
+            this.props.handleMaximize(event);
+        }
     },
-    handleMinimize: function() {
+    handleMinimize: function(event) {
         this.getUserInfo();
+        if (this.props.handleMinimize) {
+            this.props.handleMinimize(event);
+        }
     },
     render: function() {
-        console.log(this.state.title);
         if (this.state.messages == "") {
             return null;
         }
