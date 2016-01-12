@@ -26,7 +26,6 @@ var Portlet = React.createClass({
             draggable: this.props.draggable,
             title: this.props.title,
             closed: this.props.closed,
-            minimized: this.props.minimized,
             maximize: this.props.maximize,
             content: this.props.children,
             key: Math.random().toString(36).substring(7) + now.getTime()
@@ -84,9 +83,10 @@ var Portlet = React.createClass({
         }
     },
     handleMinimize: function(e) {
-        this.setState({
+        /*this.setState({
             minimized: (this.state.minimized) ? false : true
-        });
+        });*/
+        this.props.minimized = (this.props.minimized) ? false : true;
         if (this.props.handleMinimize) {
             this.props.handleMinimize(e);
         }
@@ -146,7 +146,9 @@ var Portlet = React.createClass({
             key: this.getID() + "-titlebar"
         }, React.createElement("div", {
             className: "titlebar-title",
-            key: this.getID() + "-titlebar-title"
+            key: this.getID() + "-titlebar-title",
+            onDoubleClick: this.handleNop,
+            onClick: this.handleMinimize,
         }, this.props.title), this.render_controls());
     },
     getID: function() {
@@ -160,7 +162,7 @@ var Portlet = React.createClass({
         if (this.state.closed == false) {
             results = [];
             results.push(this.render_titlebar());
-            if (this.state.minimized == false) {
+            if (this.props.minimized == false) {
                 results.push(React.createElement("div", {
                     className: "portlet-content",
                     key: this.getID() + "-content"

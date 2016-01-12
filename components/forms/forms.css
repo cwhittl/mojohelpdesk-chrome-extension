@@ -72,9 +72,6 @@ input.update_ticket {
     margin-bottom: 5px;
 }
 
-#cb_mojo_display .ticket_info, #cb_mojo_display .ticket_private_message, #cb_mojo_display .ticket_messages {
-    display: none;
-}
 
 .ticketUpdateForm label {
     float: left;
@@ -91,7 +88,7 @@ input.update_ticket {
     list-style: none;
     margin: 0px;
     padding: 0px;
-    max-height: 400px;
+    max-height: 350px;
     overflow-y: scroll;
 }
 
@@ -143,7 +140,12 @@ input.update_ticket {
 .user_info[data-user_id='0']::before {
     content: "Automated";
 }
+.ticket_messages {
+    background-color: white;
+}
+.ticket_messages .alt {
 
+}
 .ticket_messages .is_private {
     background-color: lightgray;
     -webkit-filter: invert(.8);
@@ -153,16 +155,16 @@ input.update_ticket {
     content: " (Private)";
 }
 
-.ticket_private_message {}
+.privateMessageForm {}
 
-.ticket_private_message textarea {
+.privateMessageForm textarea {
     width: 90%;
     height: 70px;
     display: block;
     position: relative;
 }
 
-.ticket_private_message button {
+.privateMessageForm button {
     width: 90%;
     clear: both;
 }

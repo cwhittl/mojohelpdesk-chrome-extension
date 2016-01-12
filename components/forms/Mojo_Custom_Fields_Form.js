@@ -73,7 +73,7 @@ var Mojo_Custom_Fields_Form = React.createClass({
             if (that.props.reload == true) {
                 setTimeout(function() {
                     window.location.reload(false);
-                }, 2000);
+                }, 1500);
             }
         });
     },

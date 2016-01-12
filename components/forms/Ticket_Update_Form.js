@@ -159,7 +159,7 @@ var Ticket_Update_Form = React.createClass({
             disable_maximize: true,
             title: "Update Ticket",
             draggable: false,
-            minimized: false,
+            minimized: this.props.minimized,
             handleMaximize: this.handleMaximize,
             handleMinimize: this.handleMinimize
         }, this.render_content());

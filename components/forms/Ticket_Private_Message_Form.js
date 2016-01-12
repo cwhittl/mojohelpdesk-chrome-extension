@@ -6,12 +6,12 @@ var Ticket_Private_Message_Form = React.createClass({
         };
     },
     handleMaximize: function() {
-        if(this.props.handleMaximize){
+        if (this.props.handleMaximize) {
             this.props.handleMaximize(event);
         }
     },
     handleMinimize: function(event) {
-        if(this.props.handleMinimize){
+        if (this.props.handleMinimize) {
             this.props.handleMinimize(event);
         }
     },
@@ -22,8 +22,13 @@ var Ticket_Private_Message_Form = React.createClass({
     },
     updateForm: function(event) {
         event.preventDefault();
-        //console.log(this.props);
-        //console.log(this.state.message);
+        console.log("Update Private Message");
+        API_Connector.send_private_message(this, this.props.cb_mojo_ext, this.onSent);
+    },
+    onSent: function() {
+        this.setState({
+            message: ""
+        });
     },
     render: function() {
         var R = React.DOM;
@@ -32,8 +37,12 @@ var Ticket_Private_Message_Form = React.createClass({
         var button = R.button;
         var content = form({
             className: "privateMessageForm"
-        }, textarea({
-            name: "message",
+        }, R.span({
+            className: this.state.status_type,
+            id: "update_ticket_status_message",
+            key: "status"
+        }, this.state.status_message), textarea({
+            id: "private_message",
             value: this.state.message,
             placeholder: "Private Message",
             onChange: this.handleChange
@@ -44,9 +53,11 @@ var Ticket_Private_Message_Form = React.createClass({
         return React.createElement(Portlet, {
             title: "Send PM",
             disable_close: true,
+            disable_maximize: true,
             draggable: false,
+            minimized: this.props.minimized,
             handleMaximize: this.handleMaximize,
             handleMinimize: this.handleMinimize
-        },content);
+        }, content);
     }
 });

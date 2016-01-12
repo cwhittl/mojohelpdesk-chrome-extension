@@ -14,43 +14,37 @@ API_Connector.get_queues = function(cb_mojo_ext, success_function) {
 API_Connector.get_agent_id = function(cb_mojo_ext, success_function) {
     $.getJSON("https://mysupport.mojohelpdesk.com/api/users/get_by_email.json?email=" + cb_mojo_ext.email_address + "&access_key=" + cb_mojo_ext.api_key, success_function);
 }
-API_Connector.send_private_message = function(props) {
-    var ticket_id = event.data.ticket_id;
+API_Connector.send_private_message = function(react_element, cb_mojo_ext, onsuccess) {
+    console.log("got to pm");
+    var state = react_element.state;
     //var ticket_id = event.data("ticket_id");
     var XMLData = "<comment>";
-    var value = "";
-    jQuery(".ticket_private_message textarea").each(function() {
-        var $this = $(this);
-        if ($(this).val()) {
-            value = $(this).val();
-            return false;
-        }
-    });
-    if (value == "") {
-        jQuery(".ticket_private_message").trigger("message", ["error", "Please enter a message"]);
-        return;
-    }
-    XMLData = XMLData + "<body>" + value + "</body>";
+    XMLData = XMLData + "<body>" + state.message + "</body>";
     XMLData = XMLData + "<is_private>true</is_private>";
     XMLData = XMLData + "</comment>";
     if (cb_mojo_ext.debug_mode == true) {
         console.log(XMLData);
     }
     $.ajax({
-        url: "https://mysupport.mojohelpdesk.com/api/tickets/" + ticket_id + "/comments?access_key=" + cb_mojo_ext.access_key,
+        url: "https://mysupport.mojohelpdesk.com/api/tickets/" + cb_mojo_ext.ticket_id  + "/comments?access_key=" + cb_mojo_ext.access_key,
         type: "POST",
         contentType: 'application/xml',
         processData: false,
         data: XMLData,
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            jQuery(".ticket_private_message").trigger("message", ["error", errorThrown]);
+            Shared.createMessage({
+                type: "error",
+                message: errorThrown
+            }, react_element);
         },
         success: function(data, textStatus, XMLHttpRequest) {
-            jQuery(".ticket_private_message").trigger("message", ["info", "Message Sent"]);
-            jQuery(".ticket_private_message textarea").val("");
-            setTimeout(function() {
-                $(".ui-dialog-content").dialog("close");
-            }, 1500);
+            Shared.createMessage({
+                type: "success",
+                message: "Message Sent"
+            }, react_element);
+            if (onsuccess) {
+                onsuccess();
+            }
         }
     });
 };
