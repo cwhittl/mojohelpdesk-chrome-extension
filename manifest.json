@@ -10,7 +10,7 @@
     "128": "images/icons/icon128.png"
   },
   "options_page": "options/options.html",
-  "web_accessible_resources": ["components/Portlet/stoplight.png","icons/icon19.png","icons/optimus.gif","icons/default_user.png"],
+  "web_accessible_resources": ["components/Portlet/stoplight.png","images/icons/*","options/images/*"],
   "permissions": [
     "storage",
     "https://mail.google.com/*",

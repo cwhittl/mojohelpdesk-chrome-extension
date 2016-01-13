@@ -7,6 +7,8 @@ var Options_Form = React.createClass({
             custom_fields_json = JSON.stringify(this.props.cb_mojo_ext.custom_fields_json);
         }
         return {
+            help_image: "../../options/images/default.png",
+            help_text: "An example view",
             api_key: this.props.cb_mojo_ext.api_key,
             debug_mode: this.props.cb_mojo_ext.debug_mode,
             mojo_domain: this.props.cb_mojo_ext.mojo_domain,
@@ -20,13 +22,15 @@ var Options_Form = React.createClass({
     },
     componentDidMount: function() {},
     updateForm: function(event) {
-        console.log("update form");
         event.preventDefault();
         var status = "Options saved.";
         if (this.state.reset_options == true) {
             chrome.storage.sync.clear();
             this.replaceState({});
             status = "Options Reset, may God have mercy on your soul.";
+            setTimeout(function() {
+                window.location.reload(false);
+            }, 500);
         } else {
             chrome.storage.sync.set({
                 api_key: this.state.api_key,
@@ -39,10 +43,22 @@ var Options_Form = React.createClass({
             });
         }
         // Update status to let user know options were saved.
-        this.state.status = status;
+        this.setState({
+            option_status: status
+        });
         setTimeout(() => {
-            this.state.status = "";
-        }, 10000);
+            this.setState({
+                option_status: ""
+            });
+        }, 5000);
+    },
+    onHelp: function(target) {
+        console.log(target);
+        this.setState({
+            help_text: target.help_text,
+            help_image: target.help_image
+        });
+        //this.setState(stateObject);
     },
     handleInputChange: function(event) {
         var stateObject = function() {
@@ -69,6 +85,11 @@ var Options_Form = React.createClass({
         var domain_fieldset = Shared.createFieldSet({
             label_text: "Please enter your Mojo Helpdesk domain (no http(s):// just the domain)",
             id: "mojo_domain",
+            labelChild: Shared.createMoreInfo({
+                help_image: "../../options/images/domain.png",
+                help_text: "This is the domain you use for Mojo Helpdesk and can be found in the search bar of you your browser while on the site.  Make sure you just put the domain and not the http:// or https://",
+                onHelp: this.onHelp
+            })
         }, R.input({
             className: "form-control",
             id: "mojo_domain",
@@ -81,6 +102,11 @@ var Options_Form = React.createClass({
         var email_fieldset = Shared.createFieldSet({
             label_text: "Please enter the email address you are associated with your Mojo Helpdesk account",
             id: "email_address",
+            labelChild: Shared.createMoreInfo({
+                help_image: "../../options/images/email.png",
+                help_text: "This is the email that you as an agent have associated with Mojo Helpdesk, you can find it in your profile if you don't know it off the top of your head.",
+                onHelp: this.onHelp
+            })
         }, R.input({
             className: "form-control",
             id: "email_address",
@@ -93,6 +119,11 @@ var Options_Form = React.createClass({
         var api_fieldset = Shared.createFieldSet({
             label_text: "Your Mojo Helpdesk API key",
             id: "api_key",
+            labelChild: Shared.createMoreInfo({
+                help_image: "../../options/images/apikey.png",
+                help_text: "This is the api key that Mojo creates for you, it is in your profile.",
+                onHelp: this.onHelp
+            })
         }, R.input({
             className: "form-control",
             id: "api_key",
@@ -105,6 +136,11 @@ var Options_Form = React.createClass({
         var title_selector_fieldset = Shared.createFieldSet({
             label_text: "Please enter Regex to retrieve the ticket number from the subject of Mojo emails",
             id: "title_selector",
+            labelChild: Shared.createMoreInfo({
+                help_image: "../../options/images/regex.png",
+                help_text: "This one gets a little more complicated, the extension needs to know when it's in a help desk ticket. The best way we have found is to use regex against the subject (which gmail puts in the title).\nYou can follow our example (above) and in all email templates put (# {{ticket. id}}) at the end of the subject and then leave the regex to its default",
+                onHelp: this.onHelp
+            })
         }, R.input({
             className: "form-control",
             id: "title_selector",
@@ -117,6 +153,11 @@ var Options_Form = React.createClass({
         var custom_fields_fieldset = Shared.createFieldSet({
             label_text: "Are you using custom fields?",
             id: "use_custom_fields",
+            labelChild: Shared.createMoreInfo({
+                help_image: "../../options/images/usecustomfields.png",
+                help_text: "This one gets even more complicated, please ask your IT Admin if you are using any before you enable this.",
+                onHelp: this.onHelp
+            })
         }, R.input({
             className: "form-control",
             id: "use_custom_fields",
@@ -139,6 +180,11 @@ var Options_Form = React.createClass({
         var debug_mode_fieldset = Shared.createFieldSet({
             label_text: "Enable debug mode?",
             id: "debug_mode",
+            labelChild: Shared.createMoreInfo({
+                help_image: "../../options/images/debug.jpg",
+                help_text: "This is only needed if you are experiencing catastrophic problems and are needing help from the developer of the extension",
+                onHelp: this.onHelp
+            })
         }, R.input({
             className: "form-control",
             id: "debug_mode",
@@ -152,7 +198,12 @@ var Options_Form = React.createClass({
             id: "reset_options",
             style: {
                 backgroundColor: "red"
-            }
+            },
+            labelChild: Shared.createMoreInfo({
+                help_image: "../../options/images/reset.jpg",
+                help_text: "It's time to start over, all settings will go back to their defaults.",
+                onHelp: this.onHelp
+            })
         }, R.input({
             className: "form-control",
             id: "reset_options",
@@ -191,8 +242,24 @@ var Options_Form = React.createClass({
             className: "options_header"
         }, "Welcome to The Mojo HelpDesk Extension by Collective Bias"), img({
             className: "options_logo",
-            src: "../../icons/icon128.png"
-        }), R.hr({}), controls);
+            src: "../../images/icons/icon128.png"
+        }), R.hr({}), div({
+            className: "option_status"
+        }, this.state.option_status), R.div({
+            className: "controls"
+        }, controls), R.div({
+            className: "help_area"
+        }, R.div({
+            className:"help_image",
+            style: {
+                backgroundImage:"url("+this.state.help_image+")"
+            }
+        }), R.textarea({
+            rows: (this.state.help_text.length / 40),
+            disabled: true,
+            className: "help_text",
+            value: this.state.help_text
+        })));
     },
     render: function() {
         return this.render_content();

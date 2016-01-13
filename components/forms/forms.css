@@ -31,6 +31,10 @@
     font-weight: bold;
     font-size: 18px;
     padding-right: 5px;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url(chrome-extension://__MSG_@@extension_id__/images/icons/icon48Trans.png);
 }
 
 .portlet-content fieldset {
@@ -130,7 +134,7 @@ input.update_ticket {
 }
 
 .user_pic[data-user_id='0'] {
-    background-image: url(chrome-extension://__MSG_@@extension_id__/icons/optimus.gif);
+    background-image: url(chrome-extension://__MSG_@@extension_id__/images/icons/optimus.gif);
 }
 
 .user_info[data-user_id='0']::after {
