@@ -95,8 +95,6 @@ var Portlet = React.createClass({
         this.setState({
             closed: (this.state.closed) ? false : true
         });
-        console.log("got here");
-        console.log(this.props);
         if (this.props.handleClose) {
             this.props.handleClose(e);
         }

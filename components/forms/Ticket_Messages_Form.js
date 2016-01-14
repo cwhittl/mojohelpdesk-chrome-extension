@@ -9,12 +9,22 @@ var Ticket_Messages_Form = React.createClass({
     },
     componentDidMount: function() {
         API_Connector.get_messages(this.props.cb_mojo_ext, this.getMessages);
-        setInterval(() => {
+        /*var message_timer = setInterval(() => {
             console.log("Getting Newest Messages");
             API_Connector.get_messages(this.props.cb_mojo_ext, this.getMessages);
         }, 30000);
+        this.setState({
+            message_timer: message_timer
+        })*/
+    },
+    componentWillUnmount:function() {
+        console.log("This is not firing");
+        console.log(this.state.message_timer);
+        clearInterval(this.state.message_timer);
     },
     getMessages: function(messages_list) {
+        //console.log(this.isMounted());
+        //console.log(this);
         var R = React.DOM;
         var message_count = 0
         if (!Shared.isEmpty(messages_list) && messages_list.length > 0) {

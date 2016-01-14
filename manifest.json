@@ -1,6 +1,6 @@
 {
   "name": "Mojo HelpDesk Extension by Collective Bias",
-  "version": "4.1",
+  "version": "4.2",
   "manifest_version": 2,
   "description": "Unofficial extension for Mojo HelpDesk that adds additional functionallity for tickets received in Gmail.",
   "homepage_url": "http://collectivebias.com",
@@ -31,6 +31,7 @@
       ],
       "js": [
         "lib/jquery/jquery-2.1.4.min.js",
+        "lib/gmail.js",
         "lib/react-0.14.5/react.js",
         "lib/react-0.14.5/react-dom.js",
         "lib/react_plugins/classnames.js",

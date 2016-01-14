@@ -3,6 +3,8 @@ console.log("Loading Mojo HelpDesk Extension by Collective Bias");
 function CB_Mojo_Extension_Loader() {
     this.init = function(cb_mojo_ext) {
         target = document.querySelector('head > title');
+        var sidebar = null;
+        var container = null;
         observer = new window.WebKitMutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (cb_mojo_ext.baseURI == mutation.target.baseURI) {
@@ -18,6 +20,7 @@ function CB_Mojo_Extension_Loader() {
                     cb_mojo_ext.ticket_id = ticket_id;
                     setTimeout(function() {
                         this.enhance_mojo_ui(cb_mojo_ext);
+                        console.log("Mojo UI Enhanced Loaded - Mojo HelpDesk Extension by Collective Bias");
                     }, 500);
                 } else {
                     var title = mutation.target.textContent;
@@ -25,13 +28,17 @@ function CB_Mojo_Extension_Loader() {
                     var title_search = title.match(re);
                     if (title_search != null) {
                         var ticket_id = title_search[title_search.length - 1];
+                        container = document.querySelector('[role="complementary"] .u5');
                         if (!Shared.isEmpty(ticket_id)) {
+                            console.log("Gmail Ticket Loaded - Mojo HelpDesk Extension by Collective Bias");
                             cb_mojo_ext.ticket_id = ticket_id;
                             sidebar = React.createElement(Gmail_Sidebar, {
                                 cb_mojo_ext: cb_mojo_ext
                             });
-                            ReactDOM.render(sidebar, document.querySelector('[role="complementary"] .u5'));
+                            ReactDOM.render(sidebar, container);
                         }
+                    } else if (sidebar != null) {
+                       // ReactDOM.unmountComponentAtNode(container);
                     }
                 }
             });
@@ -40,6 +47,7 @@ function CB_Mojo_Extension_Loader() {
             var ticket_id = window.location.href.split("/").slice(-1)[0].split("?").slice(0)[0];
             cb_mojo_ext.ticket_id = ticket_id;
             this.enhance_mojo_ui(cb_mojo_ext);
+            console.log("Mojo UI Enhanced Loaded - Mojo HelpDesk Extension by Collective Bias");
         }
         // set up an observer for the title element
         //If you wanted to get more serious you could look at this https://github.com/kartiktalwar/gmail.js

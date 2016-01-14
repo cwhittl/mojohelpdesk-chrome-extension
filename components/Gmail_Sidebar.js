@@ -19,7 +19,6 @@ var Gmail_Sidebar = React.createClass({
     },
     handleMessagesMinimize: function(event) {
         var current_state = this.state.ticket_messages_minimized;
-        console.log(current_state);
         this.setState({
             ticket_update_minimized: true,
             ticket_messages_minimized: !current_state,
@@ -38,7 +37,6 @@ var Gmail_Sidebar = React.createClass({
         this.forceUpdate();
     },
     render: function() {
-        console.log("add Sidebar");
         var R = React.DOM;
         var div = R.div;
         var cb_mojo_ext = this.props.cb_mojo_ext;
