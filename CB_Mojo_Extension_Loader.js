@@ -29,6 +29,9 @@ function CB_Mojo_Extension_Loader() {
                     if (title_search != null) {
                         var ticket_id = title_search[title_search.length - 1];
                         container = document.querySelector('[role="complementary"] .u5');
+                        /*$(container).bind("DOMNodeRemoved", function(e) {
+                            console.log("Removed: " + e.target.nodeName);
+                        });*/
                         if (!Shared.isEmpty(ticket_id)) {
                             console.log("Gmail Ticket Loaded - Mojo HelpDesk Extension by Collective Bias");
                             cb_mojo_ext.ticket_id = ticket_id;
@@ -36,9 +39,11 @@ function CB_Mojo_Extension_Loader() {
                                 cb_mojo_ext: cb_mojo_ext
                             });
                             ReactDOM.render(sidebar, container);
+
                         }
                     } else if (sidebar != null) {
-                       // ReactDOM.unmountComponentAtNode(container);
+                        // ReactDOM.unmountComponentAtNode(container);
+                        ReactDOM.unmountComponentAtNode(container);
                     }
                 }
             });
