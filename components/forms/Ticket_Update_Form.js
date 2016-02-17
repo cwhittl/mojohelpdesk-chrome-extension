@@ -124,9 +124,9 @@ var Ticket_Update_Form = React.createClass({
             labelChild: assigned_to_me
         }, Shared.create_select("assigned_to_id", potential_assignees, this.state.assigned_to_id, "Please select Assignee", this.handleChange));
         var controls = [];
-        controls.push(ticket_type);
-        controls.push(ticket_priority);
         controls.push(ticket_status);
+        controls.push(ticket_priority);
+        controls.push(ticket_type);
         controls.push(ticket_queue);
         controls.push(ticket_assignee);
         var custom_controls = Shared.create_custom_fields(this.props.cb_mojo_ext, this, this.handleChange);
