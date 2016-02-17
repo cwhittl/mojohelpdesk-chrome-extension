@@ -86,6 +86,7 @@ input.update_ticket {
     margin-top: 7px;
     float: right;
     width: 70%;
+    text-transform: capitalize;
 }
 
 .ticket_messages {
@@ -201,5 +202,5 @@ input.update_ticket {
     color: blue;
 }
 #launch_ticket:visited {
- color: blue;   
+ color: blue;
 }

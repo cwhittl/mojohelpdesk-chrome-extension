@@ -51,7 +51,8 @@ API_Connector.send_form = function(react_element, cb_mojo_ext, onsuccess) {
     var state = react_element.state;
     var ticket_id = state.ticket_id;
     var XMLData = "<ticket>";
-    XMLData = XMLData + "<ticket_queue_id>" + state.queue_id + "</ticket_queue_id>"
+    XMLData = XMLData + "<ticket_queue_id>" + state.queue_id + "</ticket_queue_id>";
+    XMLData = XMLData + "<priority_id>" + state.ticket_priority_id + "</priority_id>";
     XMLData = XMLData + "<ticket_type_id>" + state.ticket_type_id + "</ticket_type_id>";
     XMLData = XMLData + "<assigned_to_id>" + state.assigned_to_id + "</assigned_to_id>";
     XMLData = XMLData + "<status_id>" + state.ticket_status_id + "</status_id>";
@@ -63,7 +64,7 @@ API_Connector.send_form = function(react_element, cb_mojo_ext, onsuccess) {
         }
     });
     XMLData = XMLData + "</ticket>";
-    // console.log(XMLData);
+    console.log(XMLData);
     if (cb_mojo_ext.debug_mode == true) {
         console.log(XMLData);
     }

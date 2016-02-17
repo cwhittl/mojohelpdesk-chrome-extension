@@ -33,7 +33,8 @@ var Ticket_Update_Form = React.createClass({
             ticket_status_id: ticket.status_id,
             queue_id: ticket.related_data.queue.id,
             potential_assignees: potential_assignees_sorted,
-            assigned_to_id: ticket.assigned_to_id
+            assigned_to_id: ticket.assigned_to_id,
+            ticket_priority_id: ticket.priority_id
         });
         //Custom Fields
         var that = this;
@@ -103,6 +104,10 @@ var Ticket_Update_Form = React.createClass({
             label_text: "Ticket Status",
             id: "ticket_status_id",
         }, Shared.create_select("ticket_status_id", cb_mojo_ext.status_options, this.state.ticket_status_id, "Please select status", this.handleChange));
+        var ticket_priority = Shared.createFieldSet({
+            label_text: "Ticket Priority",
+            id: "ticket_priority_id",
+        }, Shared.create_select("ticket_priority_id", cb_mojo_ext.priority_options, this.state.ticket_priority_id, "Please select priority", this.handleChange));
         var ticket_queue = Shared.createFieldSet({
             label_text: "Ticket Queue",
             id: "queue_id",
@@ -120,6 +125,7 @@ var Ticket_Update_Form = React.createClass({
         }, Shared.create_select("assigned_to_id", potential_assignees, this.state.assigned_to_id, "Please select Assignee", this.handleChange));
         var controls = [];
         controls.push(ticket_type);
+        controls.push(ticket_priority);
         controls.push(ticket_status);
         controls.push(ticket_queue);
         controls.push(ticket_assignee);
