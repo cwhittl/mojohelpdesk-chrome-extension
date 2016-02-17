@@ -7,13 +7,13 @@ function CB_Mojo_Extension_Loader() {
         var container = null;
         observer = new window.WebKitMutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
+              if (cb_mojo_ext.debug_mode == true) {
+                  console.log(mutation);
+              }
                 if (cb_mojo_ext.baseURI == mutation.target.baseURI) {
                     return;
                 }
                 cb_mojo_ext.baseURI = mutation.target.baseURI;
-                if (cb_mojo_ext.debug_mode == true) {
-                    console.log(mutation);
-                }
                 if (document.URL.indexOf(cb_mojo_ext.mojo_domain) > -1 && document.URL.indexOf("ma/#/tickets/") > -1) {
                     cb_mojo_ext.is_modal = true
                     var ticket_id = window.location.href.split("/").slice(-1)[0].split("?").slice(0)[0];
@@ -23,15 +23,16 @@ function CB_Mojo_Extension_Loader() {
                         console.log("Mojo UI Enhanced Loaded - Mojo HelpDesk Extension by Collective Bias");
                     }, 500);
                 } else {
+                  setTimeout(function() {
                     var title = mutation.target.textContent;
                     var re = new RegExp(cb_mojo_ext.title_selector);
                     var title_search = title.match(re);
                     if (title_search != null) {
                         var ticket_id = title_search[title_search.length - 1];
                         container = document.querySelector('[role="complementary"] .u5');
-                        /*$(container).bind("DOMNodeRemoved", function(e) {
-                            console.log("Removed: " + e.target.nodeName);
-                        });*/
+                        if (cb_mojo_ext.debug_mode == true) {
+                          console.log(ticket_id);
+                        }
                         if (!Shared.isEmpty(ticket_id)) {
                             console.log("Gmail Ticket Loaded - Mojo HelpDesk Extension by Collective Bias");
                             cb_mojo_ext.ticket_id = ticket_id;
@@ -39,12 +40,12 @@ function CB_Mojo_Extension_Loader() {
                                 cb_mojo_ext: cb_mojo_ext
                             });
                             ReactDOM.render(sidebar, container);
-
                         }
                     } else if (sidebar != null) {
                         // ReactDOM.unmountComponentAtNode(container);
                         ReactDOM.unmountComponentAtNode(container);
                     }
+                  }, 750);
                 }
             });
         });
