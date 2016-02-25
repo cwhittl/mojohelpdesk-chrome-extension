@@ -1,4 +1,7 @@
 function API_Connector() {}
+API_Connector.get_attachment_url = function(attachment_id) {
+  return "https://mysupport.mojohelpdesk.com/api/v3/attachments/"+attachment_id; //+ "?access_key=" + cb_mojo_ext.api_key;
+}
 API_Connector.get_messages = function(cb_mojo_ext, success_function) {
   $.getJSON("https://mysupport.mojohelpdesk.com/api/tickets/" + cb_mojo_ext.ticket_id + "/comments.json?access_key=" + cb_mojo_ext.api_key, success_function);
 }
@@ -21,9 +24,8 @@ API_Connector.send_private_message = function(react_element, cb_mojo_ext, onsucc
   XMLData = XMLData + "<body>" + state.message + "</body>";
   XMLData = XMLData + "<is_private>true</is_private>";
   XMLData = XMLData + "</comment>";
-  if (cb_mojo_ext.debug_mode == true) {
-    console.log(XMLData);
-  }
+
+  debug.info(XMLData);
   $.ajax({
     url: "https://mysupport.mojohelpdesk.com/api/tickets/" + cb_mojo_ext.ticket_id + "/comments?access_key=" + cb_mojo_ext.access_key,
     type: "POST",
@@ -57,6 +59,12 @@ API_Connector.send_form = function(react_element, cb_mojo_ext, onsuccess) {
   if (state.ticket_priority_id && state.ticket_priority_id != "") {
     XMLData = XMLData + "<priority_id>" + state.ticket_priority_id + "</priority_id>";
   }
+  if (state.scheduled_on && state.scheduled_on != "") {
+    XMLData = XMLData + "<scheduled_on>" + state.scheduled_on + "T00:00:00Z</scheduled_on>";
+  }
+  if (state.due_on && state.due_on != "") {
+    XMLData = XMLData + "<due_on>" + state.due_on + "T00:00:00Z</due_on>";
+  }
   if (state.ticket_type_id && state.ticket_type_id != "") {
     XMLData = XMLData + "<ticket_type_id>" + state.ticket_type_id + "</ticket_type_id>";
   }
@@ -74,10 +82,7 @@ API_Connector.send_form = function(react_element, cb_mojo_ext, onsuccess) {
     }
   });
   XMLData = XMLData + "</ticket>";
-  console.log(XMLData);
-  if (cb_mojo_ext.debug_mode == true) {
-    console.log(XMLData);
-  }
+  debug.info(XMLData);
   $.ajax({
     url: "https://mysupport.mojohelpdesk.com/api/tickets/" + ticket_id + "?access_key=" + cb_mojo_ext.access_key,
     type: "PUT",

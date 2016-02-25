@@ -1,5 +1,5 @@
 /*
-Original Concept came from 
+Original Concept came from
 https://github.com/tgdn/titlebar-react
 Retooled to be self contained for minimize and maximized
 */
@@ -17,6 +17,9 @@ var Portlet = React.createClass({
             disable_minimize: false,
             handleMaximize: function(e) {
                 console.log("maximize not implemented");
+            },
+            handleMinimize: function(e) {
+                console.log("minimize not implemented");
             }
         }
     },
@@ -86,7 +89,6 @@ var Portlet = React.createClass({
         /*this.setState({
             minimized: (this.state.minimized) ? false : true
         });*/
-        this.props.minimized = (this.props.minimized) ? false : true;
         if (this.props.handleMinimize) {
             this.props.handleMinimize(e);
         }

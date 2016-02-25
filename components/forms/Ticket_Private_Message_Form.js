@@ -5,16 +5,6 @@ var Ticket_Private_Message_Form = React.createClass({
             message: ''
         };
     },
-    handleMaximize: function() {
-        if (this.props.handleMaximize) {
-            this.props.handleMaximize(event);
-        }
-    },
-    handleMinimize: function(event) {
-        if (this.props.handleMinimize) {
-            this.props.handleMinimize(event);
-        }
-    },
     handleChange: function(event) {
         this.setState({
             message: event.target.value
@@ -22,7 +12,7 @@ var Ticket_Private_Message_Form = React.createClass({
     },
     updateForm: function(event) {
         event.preventDefault();
-        console.log("Update Private Message");
+        debug.info("Update Private Message");
         API_Connector.send_private_message(this, this.props.cb_mojo_ext, this.onSent);
     },
     onSent: function() {
@@ -56,8 +46,8 @@ var Ticket_Private_Message_Form = React.createClass({
             disable_maximize: true,
             draggable: false,
             minimized: this.props.minimized,
-            handleMaximize: this.handleMaximize,
-            handleMinimize: this.handleMinimize
+            handleMaximize: this.props.handleMaximize,
+            handleMinimize: this.props.handleMinimize
         }, content);
     }
 });

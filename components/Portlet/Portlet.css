@@ -1,5 +1,7 @@
 .portlet {
-	padding: 0 3px;
+	padding: 0px;
+	padding-right: 3px;
+	clear: both;
 }
 .titlebar {
 	background-color: #f6f6f6;

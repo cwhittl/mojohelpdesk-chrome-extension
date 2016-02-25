@@ -67,7 +67,6 @@ var Mojo_Custom_Fields_Form = React.createClass({
     },
     updateForm: function(event) {
         event.preventDefault();
-        //console.log(this.state);
         var that = this;
         API_Connector.send_form(this, this.props.cb_mojo_ext, function() {
             if (that.props.reload == true) {

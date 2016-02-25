@@ -1,7 +1,7 @@
 var Options_Form = React.createClass({
     displayName: 'Options_Form',
     getInitialState: function() {
-        console.log(this.props.cb_mojo_ext);
+        debug.info(this.props.cb_mojo_ext);
         var custom_fields_json = this.props.cb_mojo_ext.custom_fields_json;
         if (Shared.isObject(this.props.cb_mojo_ext.custom_fields_json)) {
             custom_fields_json = JSON.stringify(this.props.cb_mojo_ext.custom_fields_json);
@@ -53,7 +53,7 @@ var Options_Form = React.createClass({
         }, 5000);
     },
     onHelp: function(target) {
-        console.log(target);
+        debug.info(target);
         this.setState({
             help_text: target.help_text,
             help_image: target.help_image

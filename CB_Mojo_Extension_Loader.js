@@ -7,9 +7,7 @@ function CB_Mojo_Extension_Loader() {
         var container = null;
         observer = new window.WebKitMutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
-              if (cb_mojo_ext.debug_mode == true) {
-                  console.log(mutation);
-              }
+                debug.info(mutation);
                 if (cb_mojo_ext.baseURI == mutation.target.baseURI) {
                     return;
                 }
@@ -30,9 +28,7 @@ function CB_Mojo_Extension_Loader() {
                     if (title_search != null) {
                         var ticket_id = title_search[title_search.length - 1];
                         container = document.querySelector('[role="complementary"] .u5');
-                        if (cb_mojo_ext.debug_mode == true) {
-                          console.log(ticket_id);
-                        }
+                        debug.info(ticket_id);
                         if (!Shared.isEmpty(ticket_id)) {
                             console.log("Gmail Ticket Loaded - Mojo HelpDesk Extension by Collective Bias");
                             cb_mojo_ext.ticket_id = ticket_id;
@@ -110,9 +106,7 @@ function CB_Mojo_Extension_Loader() {
     }
     new CB_Mojo_Extension(function(cb_mojo_ext) {
         API_Connector.get_queues(cb_mojo_ext, function(response) {
-            if (cb_mojo_ext.debug_mode == true) {
-                console.log(response);
-            } // server response
+            debug.info(response);
             var queues = [];
             $.each(response, function() {
                 $.each(this, function(k, v) {
@@ -125,9 +119,7 @@ function CB_Mojo_Extension_Loader() {
             cb_mojo_ext.queues = queues;
             if (cb_mojo_ext.mojo_agent_id == "" && !Shared.isEmpty(cb_mojo_ext.email_address)) {
                 API_Connector.get_agent_id(cb_mojo_ext, function(response) {
-                    if (cb_mojo_ext.debug_mode == true) {
-                        console.log(response);
-                    } // server response
+                    debug.info(response);
                     cb_mojo_ext.mojo_agent_id = response.user.id;
                     chrome.storage.sync.set({
                         mojo_agent_id: cb_mojo_ext.mojo_agent_id
