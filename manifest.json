@@ -38,7 +38,7 @@
         "components/Modal.js",
         "components/Portlet/Portlet.js",
         "services/API_Connector.js",
-        "components/Forms/Ticket_Private_Message_Form.js",
+        "components/Forms/Ticket_Send_Message_Form.js",
         "components/Forms/Ticket_Attachments_Form.js",
         "components/Forms/Ticket_Update_Form.js",
         "components/Forms/Ticket_Description_Form.js",

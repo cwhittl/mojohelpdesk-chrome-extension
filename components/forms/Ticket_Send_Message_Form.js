@@ -1,5 +1,5 @@
-var Ticket_Private_Message_Form = React.createClass({
-    displayName: 'Private Message Form',
+var Ticket_Send_Message_Form = React.createClass({
+    displayName: 'Message Form',
     getInitialState: function() {
         return {
             message: ''
@@ -10,15 +10,23 @@ var Ticket_Private_Message_Form = React.createClass({
             message: event.target.value
         });
     },
-    updateForm: function(event) {
+    sendPrivateMessage: function(event) {
         event.preventDefault();
-        debug.info("Update Private Message");
-        API_Connector.send_private_message(this, this.props.cb_mojo_ext, this.onSent);
+        debug.info("Private Message");
+        API_Connector.send_message(this, true, this.props.cb_mojo_ext, this.onSent);
+    },
+    sendMessage: function(event) {
+        event.preventDefault();
+        debug.info("Message");
+        API_Connector.send_message(this, false, this.props.cb_mojo_ext, this.onSent);
     },
     onSent: function() {
         this.setState({
             message: ""
         });
+        if (this.props.handleUpdate) {
+          this.props.handleUpdate();
+        }
     },
     render: function() {
         var R = React.DOM;
@@ -26,22 +34,26 @@ var Ticket_Private_Message_Form = React.createClass({
         var textarea = R.textarea;
         var button = R.button;
         var content = form({
-            className: "privateMessageForm"
+            className: "messageForm"
         }, R.span({
             className: this.state.status_type,
             id: "update_ticket_status_message",
             key: "status"
         }, this.state.status_message), textarea({
-            id: "private_message",
+            id: "message",
             value: this.state.message,
-            placeholder: "Private Message",
+            placeholder: "Message",
             onChange: this.handleChange
         }), button({
             type: "button",
-            onClick: this.updateForm
-        }, "Send Message"));
+            className: "private",
+            onClick: this.sendPrivateMessage
+        }, "Private Message"),button({
+            type: "button",
+            onClick: this.sendMessage
+        }, "Message"));
         return React.createElement(Portlet, {
-            title: "Send PM",
+            title: "Send Message",
             disable_close: true,
             disable_maximize: true,
             draggable: false,

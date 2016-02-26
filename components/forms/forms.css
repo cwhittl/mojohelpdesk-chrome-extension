@@ -98,6 +98,9 @@ input.update_ticket {
   margin: 0px;
   padding: 0px;
 }
+.ticket_messages .titlebar {
+  background: #FFF;
+}
 .ticket_attachments {
   max-height: 350px;
   overflow-y: scroll;
@@ -175,24 +178,33 @@ input.update_ticket {
 .ticket_messages {
   background-color: white;
 }
-.ticket_messages .alt {}
+.ticket_messages .alt {
+  background-color: #f2f2f2;
+}
 .ticket_messages .is_private {
-  background-color: lightgray;
-  -webkit-filter: invert(.8);
+  background-color: #F5DEB3;
 }
 .ticket_messages .is_private .user_info[data-user_id]::after {
   content: " (Private)";
 }
-.privateMessageForm {}
-.privateMessageForm textarea {
+.messageForm {}
+.messageForm textarea {
   width: 90%;
   height: 150px;
   display: block;
   position: relative;
 }
-.privateMessageForm button {
-  width: 90%;
+.messageForm button {
+  width: 30%;
   clear: both;
+  margin: 3px;
+  height: 20px;
+  border-radius: 8px;
+  border-color: #fff;
+}
+.messageForm button.private {
+  width: 60%;
+  background-color: #F5DEB3;
 }
 .ticket_info {
   clear: both;

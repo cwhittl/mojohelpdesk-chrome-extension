@@ -5,7 +5,7 @@ var Gmail_Sidebar = React.createClass({
       ticket_description_minimized: true,
       ticket_update_minimized: false,
       ticket_messages_minimized: true,
-      ticket_private_messages_minimized: true,
+      ticket_send_message_minimized: true,
       ticket_attachments_minimized: true,
       ticket: null
     }
@@ -29,13 +29,14 @@ var Gmail_Sidebar = React.createClass({
   },
   getTicket: function(response) {
     var ticket = response.ticket;
+    debug.log(ticket);
     this.setState({
       ticket: ticket
     });
   },
   handleMinimize: function(portlet_name) {
     var oldState = this.state;
-    var available_portlets = ["update", "messages", "description", "attachments", "private_messages"];
+    var available_portlets = ["update", "messages", "description", "attachments", "send_message"];
     var stateObject = function() {
       var one_not_minimized = true;
       returnObj = {};
@@ -67,8 +68,8 @@ var Gmail_Sidebar = React.createClass({
   handleMessagesMinimize: function(event) {
     this.handleMinimize("messages");
   },
-  handlePrivateMessageMinimize: function(event) {
-    this.handleMinimize("private_messages");
+  handleSendMessageMinimize: function(event) {
+    this.handleMinimize("send_message");
   },
   handleAttachmentsMinimize: function(event, event1) {
     this.handleMinimize("attachments");
@@ -119,13 +120,13 @@ var Gmail_Sidebar = React.createClass({
         handleMinimize: this.handleMessagesMinimize,
         minimized: this.state.ticket_messages_minimized
       });
-      var ticket_private_messages_form = React.createElement(Ticket_Private_Message_Form, {
+      var ticket_send_message_form = React.createElement(Ticket_Send_Message_Form, {
         cb_mojo_ext: cb_mojo_ext,
         ticket: this.state.ticket,
-        key: "Ticket_Private_Message_Form",
+        key: "Ticket_Send_Message_Form",
         handleUpdate: this.handleUpdate,
-        handleMinimize: this.handlePrivateMessageMinimize,
-        minimized: this.state.ticket_private_messages_minimized
+        handleMinimize: this.handleSendMessageMinimize,
+        minimized: this.state.ticket_send_message_minimized
       });
       var ticket_attachments_form = React.createElement(Ticket_Attachments_Form, {
         cb_mojo_ext: cb_mojo_ext,
@@ -140,7 +141,7 @@ var Gmail_Sidebar = React.createClass({
       portlets.push(ticket_message_form);
       portlets.push(ticket_attachments_form);
       portlets.push(ticket_update_form);
-      portlets.push(ticket_private_messages_form);
+      portlets.push(ticket_send_message_form);
     } else {
       //TODO LOADING Message
     }

@@ -17,12 +17,14 @@ API_Connector.get_queues = function(cb_mojo_ext, success_function) {
 API_Connector.get_agent_id = function(cb_mojo_ext, success_function) {
   $.getJSON("https://mysupport.mojohelpdesk.com/api/users/get_by_email.json?email=" + cb_mojo_ext.email_address + "&access_key=" + cb_mojo_ext.api_key, success_function);
 }
-API_Connector.send_private_message = function(react_element, cb_mojo_ext, onsuccess) {
+API_Connector.send_message = function(react_element,is_private, cb_mojo_ext, onsuccess) {
   var state = react_element.state;
   //var ticket_id = event.data("ticket_id");
   var XMLData = "<comment>";
   XMLData = XMLData + "<body>" + state.message + "</body>";
-  XMLData = XMLData + "<is_private>true</is_private>";
+  if(is_private == true){
+    XMLData = XMLData + "<is_private>true</is_private>";
+  }
   XMLData = XMLData + "</comment>";
 
   debug.info(XMLData);
