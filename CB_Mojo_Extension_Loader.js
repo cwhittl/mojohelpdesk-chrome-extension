@@ -19,7 +19,7 @@ function CB_Mojo_Extension_Loader() {
                     setTimeout(function() {
                         this.enhance_mojo_ui(cb_mojo_ext);
                         console.log("Mojo UI Enhanced Loaded - Mojo HelpDesk Extension by Collective Bias");
-                    }, 500);
+                    }, 1500);
                 } else {
                   setTimeout(function() {
                     var title = mutation.target.textContent;
@@ -69,6 +69,7 @@ function CB_Mojo_Extension_Loader() {
         newdiv.setAttribute('id', holder_key);
         document.body.appendChild(newdiv);
         jQuery("#ticket-form-info table tr").on("click", function() {
+          console.log(cb_mojo_ext);
             ReactDOM.render(React.createElement(Mojo_Custom_Fields_Form, {
                 cb_mojo_ext: cb_mojo_ext,
                 dialog_holder_id: holder_key,

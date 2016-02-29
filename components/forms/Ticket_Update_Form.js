@@ -10,20 +10,22 @@ var Ticket_Update_Form = React.createClass({
     var ticket = this.props.ticket;
     var potential_assignees = Shared.get_potential_assignees(ticket.potential_assignees);
     this.setState({
-      ticket:this.props.ticket,
+      ticket: this.props.ticket,
       ticket_description: ticket.description,
       ticket_id: ticket.id,
       due_on: Shared.convertToFormattedDate(ticket.due_on),
       scheduled_on: Shared.convertToFormattedDate(ticket.scheduled_on),
       ticket_type_id: ticket.ticket_type_id,
-      ticket_status_id: ticket.status_id,
+      status_id: ticket.status_id,
       queue_id: ticket.related_data.queue.id,
       potential_assignees: potential_assignees,
       assigned_to_id: ticket.assigned_to_id,
       ticket_priority_id: ticket.priority_id
-    });
+    }, function() {
+      Shared.set_custom_fields_state(this.props.cb_mojo_ext, this);
+    }.bind(this));
     //Custom Fields
-    var that = this;
+    /*var that = this;
     $.each(this.props.cb_mojo_ext.custom_fields_json, function(fieldName, fieldInfo) {
       var value = "";
       if (ticket.hasOwnProperty(fieldName)) {
@@ -35,7 +37,8 @@ var Ticket_Update_Form = React.createClass({
         }
         that.setState(stateObject);
       }
-    });
+    });*/
+
   },
   handleChange: function(event) {
     var stateObject = function() {
@@ -71,8 +74,8 @@ var Ticket_Update_Form = React.createClass({
     }, Shared.create_select("ticket_type_id", cb_mojo_ext.ticket_options, this.state.ticket_type_id, "Select type", this.handleChange));
     var ticket_status = Shared.createFieldSet({
       label_text: "Status",
-      id: "ticket_status_id",
-    }, Shared.create_select("ticket_status_id", cb_mojo_ext.status_options, this.state.ticket_status_id, "Select status", this.handleChange));
+      id: "status_id",
+    }, Shared.create_select("status_id", cb_mojo_ext.status_options, this.state.status_id, "Select status", this.handleChange));
     var ticket_priority = Shared.createFieldSet({
       label_text: "Priority",
       id: "ticket_priority_id",
@@ -95,21 +98,11 @@ var Ticket_Update_Form = React.createClass({
     var ticket_due_on = Shared.createFieldSet({
       label_text: "Due On",
       id: "due_on_fs",
-    }, R.input({
-      id: "due_on",
-      type: "date",
-      value: this.state.due_on,
-      onChange: this.handleChange
-    }));
+    }, Shared.create_input("due_on", "date", this.state.due_on, this.handleChange, ""));
     var ticket_scheduled_on = Shared.createFieldSet({
       label_text: "Scheduled On",
       id: "scheduled_on_fs",
-    }, R.input({
-      id: "scheduled_on",
-      type: "date",
-      value: this.state.scheduled_on,
-      onChange: this.handleChange
-    }));
+    }, Shared.create_input("scheduled_on", "date", this.state.scheduled_on, this.handleChange, ""));
     var controls = [];
     controls.push(ticket_status);
     controls.push(ticket_priority);
@@ -118,15 +111,16 @@ var Ticket_Update_Form = React.createClass({
     controls.push(ticket_type);
     controls.push(ticket_queue);
     controls.push(ticket_assignee);
-    var custom_controls = Shared.create_custom_fields(this.props.cb_mojo_ext, this, this.handleChange);
+    var custom_controls = Shared.create_custom_fields(this.props.ticket, this.props.cb_mojo_ext, this.state, this.handleChange);
+    //var custom_controls = Shared.create_custom_fields(this.props.cb_mojo_ext, this, this.handleChange);
     controls.push(custom_controls);
-    return form({
+    return R.div({},form({
       className: "ticketUpdateForm"
     }, R.span({
       className: this.state.status_type,
       id: "update_ticket_status_message",
       key: "status"
-    }, this.state.status_message), controls, input({
+    }, this.state.status_message), controls), input({
       type: "submit",
       className: "update_ticket",
       value: "Update Ticket",
@@ -137,6 +131,7 @@ var Ticket_Update_Form = React.createClass({
     if (this.props.ticket == null || this.state.ticket_id == null || this.state.potential_assignees == null) {
       return null;
     }
+    debug.info(this.state);
     var R = React.DOM;
     return React.createElement(Portlet, {
       key: "ticket_update_form",

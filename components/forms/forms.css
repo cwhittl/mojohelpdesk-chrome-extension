@@ -24,7 +24,7 @@
   position: relative;
 }
 .modal_image {
-  width:800px;
+  width: 800px;
 }
 .mojo_gmail_sidebar_title {
   text-align: right;
@@ -43,7 +43,7 @@
   width: 98%;
   float: left;
 }
-.portlet-content {
+.portlet-content form {
   max-height: 250px;
   overflow-y: scroll;
 }
@@ -91,6 +91,8 @@ input.update_ticket {
 }
 .ticketUpdateForm select {
   width: 60%;
+}
+.ticketUpdateForm select, .ticketUpdateForm label {
   text-transform: capitalize;
 }
 .ticket_messages {
@@ -106,35 +108,35 @@ input.update_ticket {
   overflow-y: scroll;
 }
 .attachment-image, .attachment-document {
-  width:45%;
+  width: 45%;
   overflow: hidden;
   height: 45px;
   float: left;
   text-align: center;
   font-size: 10px;
-  color:black;
-  margin:2px;
+  color: black;
+  margin: 2px;
   border: 1px dashed black;
 }
-.attachment-image a, .attachment-document a{
+.attachment-image a, .attachment-document a {
   overflow: hidden;
   display: block;
   height: 15px;
   width: 100%;
 }
-.attachment-image div, .attachment-document div{
+.attachment-image div, .attachment-document div {
   height: 30px;
   width: 100%;
   text-align: center;
 }
-.attachment-document div{
+.attachment-document div {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
   background-image: url(chrome-extension://__MSG_@@extension_id__/images/icons/download_file.png);
 }
-.attachment-image object{
-  height:100%;
+.attachment-image object {
+  height: 100%;
 }
 .message_header {
   clear: both;

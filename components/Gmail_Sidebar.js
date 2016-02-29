@@ -18,7 +18,7 @@ var Gmail_Sidebar = React.createClass({
     var ticket_timer = setInterval(() => {
       console.log("Getting Newest Ticket Info");
       this.handleUpdate();
-    }, 30000);
+    }, 180000);
     this.setState({
       ticket_timer: ticket_timer
     });
@@ -29,7 +29,7 @@ var Gmail_Sidebar = React.createClass({
   },
   getTicket: function(response) {
     var ticket = response.ticket;
-    debug.log(ticket);
+    debug.info(ticket);
     this.setState({
       ticket: ticket
     });

@@ -73,16 +73,10 @@ API_Connector.send_form = function(react_element, cb_mojo_ext, onsuccess) {
   if (state.assigned_to_id && state.assigned_to_id != "") {
     XMLData = XMLData + "<assigned_to_id>" + state.assigned_to_id + "</assigned_to_id>";
   }
-  if (state.ticket_status_id && state.ticket_status_id != "") {
-    XMLData = XMLData + "<status_id>" + state.ticket_status_id + "</status_id>";
+  if (state.status_id && state.status_id != "") {
+    XMLData = XMLData + "<status_id>" + state.status_id + "</status_id>";
   }
-  $.each(cb_mojo_ext.custom_fields_json, function(fieldName, fieldInfo) {
-    var value = "";
-    if (state.hasOwnProperty(fieldName)) {
-      value = state[fieldName];
-      XMLData = XMLData + "<" + fieldName + ">" + value + "</" + fieldName + ">";
-    }
-  });
+  XMLData = XMLData + Shared.get_custom_fields_xml(cb_mojo_ext,state);
   XMLData = XMLData + "</ticket>";
   debug.info(XMLData);
   $.ajax({
