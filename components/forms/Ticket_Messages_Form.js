@@ -6,7 +6,6 @@ var Ticket_Messages_Form = React.createClass({
     var message_count = 0
     if (!Shared.isEmpty(messages_list) && messages_list.length > 0) {
       //We want latest first
-      //var sorted_messages_list = messages_list.reverse();
       var sorted_messages_list = Shared.reverse(messages_list);
       var cb_mojo_ext = this.props.cb_mojo_ext;
       var mojo_domain = cb_mojo_ext.mojo_domain;

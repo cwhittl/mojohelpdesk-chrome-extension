@@ -43,8 +43,9 @@
   width: 98%;
   float: left;
 }
-.portlet-content form {
+.portlet-content form, .ticket_messages {
   max-height: 250px;
+  word-wrap: break-word;
   overflow-y: scroll;
 }
 #update_ticket_status_message, #load_error, #launch_ticket {
@@ -94,6 +95,7 @@ input.update_ticket {
 }
 .ticketUpdateForm select, .ticketUpdateForm label {
   text-transform: capitalize;
+  word-wrap:normal;
 }
 .ticket_messages {
   list-style: none;

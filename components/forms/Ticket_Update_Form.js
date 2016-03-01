@@ -24,21 +24,6 @@ var Ticket_Update_Form = React.createClass({
     }, function() {
       Shared.set_custom_fields_state(this.props.cb_mojo_ext, this);
     }.bind(this));
-    //Custom Fields
-    /*var that = this;
-    $.each(this.props.cb_mojo_ext.custom_fields_json, function(fieldName, fieldInfo) {
-      var value = "";
-      if (ticket.hasOwnProperty(fieldName)) {
-        value = ticket[fieldName];
-        var stateObject = function() {
-          returnObj = {};
-          returnObj[fieldName] = value;
-          return returnObj;
-        }
-        that.setState(stateObject);
-      }
-    });*/
-
   },
   handleChange: function(event) {
     var stateObject = function() {
@@ -114,7 +99,7 @@ var Ticket_Update_Form = React.createClass({
     var custom_controls = Shared.create_custom_fields(this.props.ticket, this.props.cb_mojo_ext, this.state, this.handleChange);
     //var custom_controls = Shared.create_custom_fields(this.props.cb_mojo_ext, this, this.handleChange);
     controls.push(custom_controls);
-    return R.div({},form({
+    return R.div({}, form({
       className: "ticketUpdateForm"
     }, R.span({
       className: this.state.status_type,
