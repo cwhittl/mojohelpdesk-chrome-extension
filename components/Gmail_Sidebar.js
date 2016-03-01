@@ -7,11 +7,23 @@ var Gmail_Sidebar = React.createClass({
       ticket_messages_minimized: true,
       ticket_send_message_minimized: true,
       ticket_attachments_minimized: true,
-      ticket: null
+      ticket: null,
+      error_message: ""
     }
   },
+  handleError: function(event) {
+    var message = "Unknown Error, Please Enable Debug and Check Javascript Console";
+    if (event.hasOwnProperty("responseText")) {
+      message = "Message From Mojo -- " + event.responseText;
+    } else {
+      debug.error(event);
+    }
+    this.setState({
+      error_message: message
+    });
+  },
   handleUpdate: function() {
-    API_Connector.get_ticket(this.props.cb_mojo_ext, this.getTicket);
+    API_Connector.get_ticket(this.props.cb_mojo_ext, this.getTicket, this.handleError);
   },
   componentDidMount: function() {
     this.handleUpdate();
@@ -41,18 +53,18 @@ var Gmail_Sidebar = React.createClass({
       var one_not_minimized = true;
       returnObj = {};
       for (var i = 0; i < available_portlets.length; i++) {
-        var state_name = "ticket_"+available_portlets[i]+"_minimized";
+        var state_name = "ticket_" + available_portlets[i] + "_minimized";
         var state_value = true;
-        if(portlet_name == available_portlets[i]){
+        if (portlet_name == available_portlets[i]) {
           state_value = !oldState[state_name];
         }
         returnObj[state_name] = state_value;
-        if(state_value == false){
-            one_not_minimized = false;
+        if (state_value == false) {
+          one_not_minimized = false;
         }
       }
       //We want one always loaded and the update is the most popular
-      if(one_not_minimized == true){
+      if (one_not_minimized == true) {
         returnObj["ticket_update_minimized"] = false;
       }
       return returnObj;
@@ -85,6 +97,10 @@ var Gmail_Sidebar = React.createClass({
         href: cb_mojo_ext.optionsUrl
       }, "Please Configure and Refresh");
       console.log("Error Loading Mojo HelpDesk Extension by Collective Bias - Missing Options");
+    } else if (this.state.error_message != "") {
+      portlets = React.createElement("div", {
+        id: "ajax_error",
+      }, this.state.error_message);
     } else if (this.state.ticket != null) {
       var submitter_full_name = this.state.ticket.related_data.user.full_name;
       var submitter_picture_url = this.state.ticket.related_data.user.picture_url;

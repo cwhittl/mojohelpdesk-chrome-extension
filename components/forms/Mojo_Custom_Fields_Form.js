@@ -1,15 +1,25 @@
 var Mojo_Custom_Fields_Form = React.createClass({
   displayName: 'Mojo_Custom_Fields_Form',
   getInitialState: function() {
-    var now = new Date();
     return {
+      error_message: "",
       show: true,
-      id: this.props.id,
       dialog_holder_id: this.props.dialog_holder_id
     };
   },
   componentWillMount: function() {
-    API_Connector.get_ticket(this.props.cb_mojo_ext, this.getTicket);
+    API_Connector.get_ticket(this.props.cb_mojo_ext, this.getTicket, this.handleError);
+  },
+  handleError: function(event) {
+    var message = "Unknown Error, Please Enable Debug and Check Javascript Console";
+    if (event.hasOwnProperty("responseText")) {
+      message = "Message From Mojo -- " + event.responseText;
+    } else {
+      debug.error(event);
+    }
+    this.setState({
+      error_message: message
+    });
   },
   handleChange: function(event) {
     var stateObject = function() {
@@ -57,6 +67,19 @@ var Mojo_Custom_Fields_Form = React.createClass({
   render: function() {
     var R = React.DOM;
     var input = R.input;
+    if (this.state.error_message != "") {
+      return React.createElement(Modal, {
+        show: true,
+        handleClose: function(event) {
+          /*This is a hack to make sure another modal can be spawned, for some reason React
+          is leaving a no script tag that keeps any Modals from firing again.
+          */
+          document.querySelector(holder_key).innerHTML = "";
+        }
+      }, React.createElement("div", {
+        id: "ajax_error",
+      }, this.state.error_message));
+    }
     if (this.state.ticket == null || this.state.show != true || !Modal) {
       return null;
     }

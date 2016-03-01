@@ -1,28 +1,48 @@
 function API_Connector() {}
 API_Connector.get_attachment_url = function(attachment_id) {
-  return "https://mysupport.mojohelpdesk.com/api/v3/attachments/"+attachment_id; //+ "?access_key=" + cb_mojo_ext.api_key;
+  return "https://mysupport.mojohelpdesk.com/api/v3/attachments/" + attachment_id; //+ "?access_key=" + cb_mojo_ext.api_key;
 }
 API_Connector.get_messages = function(cb_mojo_ext, success_function) {
-  $.getJSON("https://mysupport.mojohelpdesk.com/api/tickets/" + cb_mojo_ext.ticket_id + "/comments.json?access_key=" + cb_mojo_ext.api_key, success_function);
+  $.getJSON("https://mysupport.mojohelpdesk.com/api/tickets/" + cb_mojo_ext.ticket_id + "/comments.json?access_key=" + cb_mojo_ext.api_key, success_function).fail(function(e) {
+    if (error_function != null && typeof error_function == "function") {
+      error_function(e);
+    }
+  });
 }
 API_Connector.get_user = function(user_id, cb_mojo_ext, success_function) {
-  $.getJSON("https://mysupport.mojohelpdesk.com/api/users/" + user_id + ".json?access_key=" + cb_mojo_ext.api_key, success_function);
+  $.getJSON("https://mysupport.mojohelpdesk.com/api/users/" + user_id + ".json?access_key=" + cb_mojo_ext.api_key, success_function).fail(function(e) {
+    if (error_function != null && typeof error_function == "function") {
+      error_function(e);
+    }
+  });
 }
-API_Connector.get_ticket = function(cb_mojo_ext, success_function) {
-  $.getJSON("https://mysupport.mojohelpdesk.com/api/tickets/" + cb_mojo_ext.ticket_id + ".json?access_key=" + cb_mojo_ext.api_key, success_function);
+API_Connector.get_ticket = function(cb_mojo_ext, success_function, error_function) {
+  $.getJSON("https://mysupport.mojohelpdesk.com/api/tickets/" + cb_mojo_ext.ticket_id + ".json?access_key=" + cb_mojo_ext.api_key, success_function).fail(function(e) {
+    if (error_function != null && typeof error_function == "function") {
+      error_function(e);
+    }
+  });
 }
-API_Connector.get_queues = function(cb_mojo_ext, success_function) {
-  $.getJSON("https://mysupport.mojohelpdesk.com/api/ticket_queues.json?access_key=" + cb_mojo_ext.api_key, success_function);
+API_Connector.get_queues = function(cb_mojo_ext, success_function, error_function) {
+  $.getJSON("https://mysupport.mojohelpdesk.com/api/ticket_queues.json?access_key=" + cb_mojo_ext.api_key, success_function).fail(function(e) {
+    if (error_function != null && typeof error_function == "function") {
+      error_function(e);
+    }
+  });
 }
 API_Connector.get_agent_id = function(cb_mojo_ext, success_function) {
-  $.getJSON("https://mysupport.mojohelpdesk.com/api/users/get_by_email.json?email=" + cb_mojo_ext.email_address + "&access_key=" + cb_mojo_ext.api_key, success_function);
+  $.getJSON("https://mysupport.mojohelpdesk.com/api/users/get_by_email.json?email=" + cb_mojo_ext.email_address + "&access_key=" + cb_mojo_ext.api_key, success_function).fail(function(e) {
+    if (error_function != null && typeof error_function == "function") {
+      error_function(e);
+    }
+  });
 }
-API_Connector.send_message = function(react_element,is_private, cb_mojo_ext, onsuccess) {
+API_Connector.send_message = function(react_element, is_private, cb_mojo_ext, onsuccess) {
   var state = react_element.state;
   //var ticket_id = event.data("ticket_id");
   var XMLData = "<comment>";
   XMLData = XMLData + "<body>" + state.message + "</body>";
-  if(is_private == true){
+  if (is_private == true) {
     XMLData = XMLData + "<is_private>true</is_private>";
   }
   XMLData = XMLData + "</comment>";
@@ -76,7 +96,7 @@ API_Connector.send_form = function(react_element, cb_mojo_ext, onsuccess) {
   if (state.status_id && state.status_id != "") {
     XMLData = XMLData + "<status_id>" + state.status_id + "</status_id>";
   }
-  XMLData = XMLData + Shared.get_custom_fields_xml(cb_mojo_ext,state);
+  XMLData = XMLData + Shared.get_custom_fields_xml(cb_mojo_ext, state);
   XMLData = XMLData + "</ticket>";
   debug.info(XMLData);
   $.ajax({
