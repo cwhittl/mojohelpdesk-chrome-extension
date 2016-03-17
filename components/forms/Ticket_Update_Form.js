@@ -13,8 +13,8 @@ var Ticket_Update_Form = React.createClass({
       ticket: this.props.ticket,
       ticket_description: ticket.description,
       ticket_id: ticket.id,
-      due_on: Shared.convertToFormattedDate(ticket.due_on),
-      scheduled_on: Shared.convertToFormattedDate(ticket.scheduled_on),
+      due_on: Shared.get_due_on(ticket.created_on, ticket.priority_id, this.props.cb_mojo_ext),
+      scheduled_on: Shared.get_scheduled_on(ticket.created_on, ticket.priority_id, this.props.cb_mojo_ext),
       ticket_type_id: ticket.ticket_type_id,
       status_id: ticket.status_id,
       queue_id: ticket.related_data.queue.id,
@@ -26,8 +26,14 @@ var Ticket_Update_Form = React.createClass({
     }.bind(this));
   },
   handleChange: function(event) {
+    var ticket = this.state.ticket;
+    var cb_mojo_ext = this.props.cb_mojo_ext;
     var stateObject = function() {
       returnObj = {};
+      if (this.target.id == "ticket_priority_id") {
+        returnObj["due_on"] = Shared.get_due_on(ticket.created_on, this.target.value, cb_mojo_ext);
+        returnObj["scheduled_on"] = Shared.get_scheduled_on(ticket.created_on, this.target.value, cb_mojo_ext);
+      }
       returnObj[this.target.id] = this.target.value;
       return returnObj;
     }.bind(event)();

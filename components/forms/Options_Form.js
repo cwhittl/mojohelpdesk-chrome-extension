@@ -16,7 +16,6 @@ var Options_Form = React.createClass({
             custom_fields_json: custom_fields_json,
             email_address: this.props.cb_mojo_ext.email_address,
             mojo_agent_id: this.props.cb_mojo_ext.mojo_domain,
-            title_selector: this.props.cb_mojo_ext.title_selector,
             reset_options: false
         };
     },
@@ -38,8 +37,7 @@ var Options_Form = React.createClass({
                 mojo_domain: this.state.mojo_domain,
                 use_custom_fields: this.state.use_custom_fields,
                 custom_fields_json: JSON.parse(this.state.custom_fields_json),
-                email_address: this.state.email_address,
-                title_selector: this.state.title_selector
+                email_address: this.state.email_address
             });
         }
         // Update status to let user know options were saved.
@@ -133,23 +131,6 @@ var Options_Form = React.createClass({
             value: this.state.api_key,
             onChange: this.handleInputChange
         }));
-        var title_selector_fieldset = Shared.createFieldSet({
-            label_text: "Please enter Regex to retrieve the ticket number from the subject of Mojo emails",
-            id: "title_selector",
-            labelChild: Shared.createMoreInfo({
-                help_image: "../../options/images/regex.png",
-                help_text: "This one gets a little more complicated, the extension needs to know when it's in a help desk ticket. The best way we have found is to use regex against the subject (which gmail puts in the title).\nYou can follow our example (above) and in all email templates put (# {{ticket. id}}) at the end of the subject and then leave the regex to its default",
-                onHelp: this.onHelp
-            })
-        }, R.input({
-            className: "form-control",
-            id: "title_selector",
-            key: "title_selector",
-            type: "text",
-            placeholder: "HelpDesk Ticket Subject Regext",
-            value: this.state.title_selector,
-            onChange: this.handleInputChange
-        }));
         var custom_fields_fieldset = Shared.createFieldSet({
             label_text: "Are you using custom fields?",
             id: "use_custom_fields",
@@ -227,7 +208,6 @@ var Options_Form = React.createClass({
         if (!Shared.isEmpty(this.state.mojo_domain) && Shared.isValidDomain(this.state.mojo_domain)) {
             controls.push(email_fieldset);
             controls.push(api_fieldset);
-            controls.push(title_selector_fieldset);
             controls.push(custom_fields_fieldset);
             if (this.state.use_custom_fields == true) {
                 controls.push(custom_fields_json_fieldset);
