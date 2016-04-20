@@ -25,3 +25,7 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths: []
+- "lib/react-0.14.5/react-dom.js"
+- "lib/react-0.14.5/react-with-addons.js"
+- "lib/react-0.14.5/react.js"
+- "lib/react_plugins/classnames.js"
