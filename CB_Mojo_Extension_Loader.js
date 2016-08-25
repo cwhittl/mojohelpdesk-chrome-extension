@@ -22,11 +22,9 @@ function CB_Mojo_Extension_Loader() {
           }, 1500);
         } else {
           setTimeout(function() {
-            var title = mutation.target.textContent;
-            var re = new RegExp(cb_mojo_ext.title_selector);
-            var title_search = title.match(re);
-            if (title_search != null) {
-              var ticket_id = title_search[title_search.length - 1];
+            email = $("span[name='"+cb_mojo_ext.mojo_domain+"']").attr("email");
+            if (email != null) {
+              var ticket_id = ticket_id = email.substring(email.indexOf(".")+1,email.indexOf("@"));
               container = document.querySelector('[role="complementary"] .u5');
               debug.info(ticket_id);
               if (!Shared.isEmpty(ticket_id)) {
@@ -51,7 +49,7 @@ function CB_Mojo_Extension_Loader() {
       this.enhance_mojo_ui(cb_mojo_ext);
       console.log("Mojo UI Enhanced Loaded - Mojo HelpDesk Extension by Collective Bias");
     }
-    // set up an observer for the title element
+    // set up an observer for the title element to catch transitions between gmail 
     //If you wanted to get more serious you could look at this https://github.com/kartiktalwar/gmail.js
     observer.observe(target, {
       subtree: true,

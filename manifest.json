@@ -1,54 +1,23 @@
 {
-  "name": "Mojo HelpDesk Extension by Collective Bias",
-  "version": "5.3",
-  "manifest_version": 2,
-  "description": "Unofficial extension for Mojo HelpDesk that adds additional functionallity for tickets received in Gmail.",
-  "homepage_url": "http://collectivebias.com",
-  "icons": {
-    "16": "images/icons/icon16.png",
-    "48": "images/icons/icon48.png",
-    "128": "images/icons/icon128.png"
-  },
-  "options_page": "options/options.html",
-  "web_accessible_resources": ["components/Portlet/stoplight.png","images/icons/*","options/images/*"],
-  "permissions": [
-    "storage",
-    "https://mail.google.com/*",
-    "https://mail.collectivebias.com/*",
-    "https://mysupport.mojohelpdesk.com/*",
-    "https://*.mojohelpdesk.com/*"
-  ],
-  "content_scripts": [
-    {
-      "matches": [
-        "https://mail.google.com/*",
-        "https://mail.collectivebias.com/*",
-        "https://*.mojohelpdesk.com/*"
-      ],
-      "css": [
-        "components/Portlet/Portlet.css",
-        "components/Forms/forms.css"
-      ],
-      "js": [
-        "lib/jquery/jquery-2.1.4.min.js",
-        "lib/react-0.14.5/react.js",
-        "lib/react-0.14.5/react-dom.js",
-        "lib/react_plugins/classnames.js",
-        "lib/Shared.js",
-        "components/Modal.js",
-        "components/Portlet/Portlet.js",
-        "services/API_Connector.js",
-        "components/Forms/Ticket_Send_Message_Form.js",
-        "components/Forms/Ticket_Attachments_Form.js",
-        "components/Forms/Ticket_Update_Form.js",
-        "components/Forms/Ticket_Description_Form.js",
-        "components/Forms/Ticket_Messages_Form.js",
-        "components/Forms/Mojo_Custom_Fields_Form.js",
-        "components/Gmail_Sidebar.js",
-        "lib/CB_Mojo_Extension.js",
-        "CB_Mojo_Extension_Loader.js"
-      ],
+   "content_scripts": [ {
+      "css": [ "components/Portlet/Portlet.css", "components/Forms/forms.css" ],
+      "js": [ "lib/jquery/jquery-2.1.4.min.js", "lib/react-0.14.5/react.js", "lib/react-0.14.5/react-dom.js", "lib/react_plugins/classnames.js", "lib/Dates.js", "lib/Shared.js", "components/Modal.js", "components/Portlet/Portlet.js", "services/API_Connector.js", "components/Forms/Ticket_Send_Message_Form.js", "components/Forms/Ticket_Attachments_Form.js", "components/Forms/Ticket_Update_Form.js", "components/Forms/Ticket_Description_Form.js", "components/Forms/Ticket_Messages_Form.js", "components/Forms/Mojo_Custom_Fields_Form.js", "components/Gmail_Sidebar.js", "lib/CB_Mojo_Extension.js", "CB_Mojo_Extension_Loader.js" ],
+      "matches": [ "https://mail.google.com/*", "https://mail.collectivebias.com/*", "https://*.mojohelpdesk.com/*" ],
       "run_at": "document_end"
-    }
-  ]
+   } ],
+   "description": "Unofficial extension for Mojo HelpDesk that adds additional functionallity for tickets received in Gmail.",
+   "homepage_url": "http://collectivebias.com",
+   "icons": {
+      "128": "images/icons/icon128.png",
+      "16": "images/icons/icon16.png",
+      "48": "images/icons/icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoQ+8jeh7feCjD3uEFQWlf2M+snwxheSUAZdZJyrFC4QY4LSR1e2eEzvJhLRXy/5J68AietNA7rk9q27Ft7A0Behm/WI5/QCTe43G8mK8UpE1c+TNcAFBHrAiCrbBCbujHuDP6MSjPh9mfqs5iXs3h+pi960HDvuK8EunvoS541wdfPY8UcX+6I278fUPkJoY5pKMO8gsQ20CUDmdxm55cADQm3J/t4nIgNjtD6rxmWPalAbzEYCwvq7KcUYmz6Ubzx8WEu4GeF/QI75sDzgQuJDIkZS/Uh8koz1oDn1NGyd0AUBXmisOEIjWOPnxt28QEHbOdgoVR6d7kTiJDBy1ewIDAQAB",
+   "manifest_version": 2,
+   "name": "Mojo HelpDesk Extension by Collective Bias",
+   "options_page": "options/options.html",
+   "permissions": [ "storage", "https://mail.google.com/*", "https://mail.collectivebias.com/*", "https://mysupport.mojohelpdesk.com/*", "https://*.mojohelpdesk.com/*" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "5.5",
+   "web_accessible_resources": [ "components/Portlet/stoplight.png", "images/icons/*", "options/images/*" ]
 }

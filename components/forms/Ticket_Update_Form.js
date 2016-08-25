@@ -9,12 +9,19 @@ var Ticket_Update_Form = React.createClass({
   componentDidMount: function() {
     var ticket = this.props.ticket;
     var potential_assignees = Shared.get_potential_assignees(ticket.potential_assignees);
+    var due_on = ticket.due_on;
+    var scheduled_on = ticket.scheduled_on;
+
+    if (this.props.cb_mojo_ext.enforce_slas == true || (Shared.isEmpty(due_on) || Shared.isEmpty(scheduled_on))) {
+      due_on = Shared.get_due_on(ticket.created_on, ticket.priority_id, this.props.cb_mojo_ext);
+      scheduled_on = Shared.get_scheduled_on(ticket.created_on, ticket.priority_id, this.props.cb_mojo_ext);
+    }
     this.setState({
       ticket: this.props.ticket,
       ticket_description: ticket.description,
       ticket_id: ticket.id,
-      due_on: Shared.convertToFormattedDate(ticket.due_on),
-      scheduled_on: Shared.convertToFormattedDate(ticket.scheduled_on),
+      due_on: due_on,
+      scheduled_on: scheduled_on,
       ticket_type_id: ticket.ticket_type_id,
       status_id: ticket.status_id,
       queue_id: ticket.related_data.queue.id,
@@ -26,8 +33,16 @@ var Ticket_Update_Form = React.createClass({
     }.bind(this));
   },
   handleChange: function(event) {
+    var ticket = this.state.ticket;
+    var due_on = this.state.due_on;
+    var scheduled_on = this.state.scheduled_on;
+    var cb_mojo_ext = this.props.cb_mojo_ext;
     var stateObject = function() {
       returnObj = {};
+      if (this.target.id == "ticket_priority_id" && (cb_mojo_ext.enforce_slas == true || (Shared.isEmpty(due_date) || Shared.isEmpty(scheduled_on)))) {
+        returnObj["due_on"] = Shared.get_due_on(ticket.created_on, this.target.value, cb_mojo_ext);
+        returnObj["scheduled_on"] = Shared.get_scheduled_on(ticket.created_on, this.target.value, cb_mojo_ext);
+      }
       returnObj[this.target.id] = this.target.value;
       return returnObj;
     }.bind(event)();
@@ -80,19 +95,23 @@ var Ticket_Update_Form = React.createClass({
       id: "assigned_to_id",
       labelChild: assigned_to_me
     }, Shared.create_select("assigned_to_id", potential_assignees, this.state.assigned_to_id, "Select Assignee", this.handleChange));
+    var disable_dates = false;
+    if (cb_mojo_ext.enforce_slas == true) {
+      disable_dates = true;
+    }
     var ticket_due_on = Shared.createFieldSet({
       label_text: "Due On",
       id: "due_on_fs",
-    }, Shared.create_input("due_on", "date", this.state.due_on, this.handleChange, ""));
+    }, Shared.create_input("due_on", "date", this.state.due_on, this.handleChange, "", disable_dates));
     var ticket_scheduled_on = Shared.createFieldSet({
       label_text: "Scheduled On",
       id: "scheduled_on_fs",
-    }, Shared.create_input("scheduled_on", "date", this.state.scheduled_on, this.handleChange, ""));
+    }, Shared.create_input("scheduled_on", "date", this.state.scheduled_on, this.handleChange, "", disable_dates));
     var controls = [];
     controls.push(ticket_status);
     controls.push(ticket_priority);
-    controls.push(ticket_due_on);
     controls.push(ticket_scheduled_on);
+    controls.push(ticket_due_on);
     controls.push(ticket_type);
     controls.push(ticket_queue);
     controls.push(ticket_assignee);
