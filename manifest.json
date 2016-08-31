@@ -15,9 +15,12 @@
    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoQ+8jeh7feCjD3uEFQWlf2M+snwxheSUAZdZJyrFC4QY4LSR1e2eEzvJhLRXy/5J68AietNA7rk9q27Ft7A0Behm/WI5/QCTe43G8mK8UpE1c+TNcAFBHrAiCrbBCbujHuDP6MSjPh9mfqs5iXs3h+pi960HDvuK8EunvoS541wdfPY8UcX+6I278fUPkJoY5pKMO8gsQ20CUDmdxm55cADQm3J/t4nIgNjtD6rxmWPalAbzEYCwvq7KcUYmz6Ubzx8WEu4GeF/QI75sDzgQuJDIkZS/Uh8koz1oDn1NGyd0AUBXmisOEIjWOPnxt28QEHbOdgoVR6d7kTiJDBy1ewIDAQAB",
    "manifest_version": 2,
    "name": "Mojo HelpDesk Extension by Collective Bias",
-   "options_page": "options/options.html",
+   "options_ui": {
+      "page": "options/options.html",
+      "open_in_tab": true
+   },
    "permissions": [ "storage", "https://mail.google.com/*", "https://mail.collectivebias.com/*", "https://mysupport.mojohelpdesk.com/*", "https://*.mojohelpdesk.com/*" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "5.6",
+   "version": "5.7",
    "web_accessible_resources": [ "components/Portlet/stoplight.png", "images/icons/*", "options/images/*" ]
 }

@@ -49,7 +49,7 @@ function CB_Mojo_Extension_Loader() {
       this.enhance_mojo_ui(cb_mojo_ext);
       console.log("Mojo UI Enhanced Loaded - Mojo HelpDesk Extension by Collective Bias");
     }
-    // set up an observer for the title element to catch transitions between gmail 
+    // set up an observer for the title element to catch transitions between gmail
     //If you wanted to get more serious you could look at this https://github.com/kartiktalwar/gmail.js
     observer.observe(target, {
       subtree: true,
@@ -120,7 +120,7 @@ function CB_Mojo_Extension_Loader() {
         API_Connector.get_agent_id(cb_mojo_ext, function(response) {
           debug.info(response);
           cb_mojo_ext.mojo_agent_id = response.user.id;
-          chrome.storage.sync.set({
+          Shared.setStorage({
             mojo_agent_id: cb_mojo_ext.mojo_agent_id
           });
         }, function(event) {

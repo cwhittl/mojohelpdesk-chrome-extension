@@ -33,14 +33,14 @@ var Options_Form = React.createClass({
     event.preventDefault();
     var status = "Options saved.";
     if (this.state.reset_options == true) {
-      chrome.storage.sync.clear();
+      Shared.clearStorage();
       this.replaceState({});
       status = "Options Reset, may God have mercy on your soul.";
       setTimeout(function() {
         window.location.reload(false);
       }, 500);
     } else {
-      chrome.storage.sync.set({
+      Shared.setStorage({
         api_key: this.state.api_key,
         debug_mode: this.state.debug_mode,
         mojo_domain: this.state.mojo_domain,
