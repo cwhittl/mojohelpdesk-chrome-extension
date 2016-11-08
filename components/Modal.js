@@ -7,7 +7,6 @@ Retooled to be completly non-jsx and brought the default styles inside the class
 var Modal = React.createClass({
   displayName: "Modal",
   _handleEscKey: function(event) {
-    console.log(event.keyCode);
     if (event.keyCode == 27) {
       this.fadeOut();
     }

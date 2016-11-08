@@ -83,7 +83,6 @@ var Mojo_Custom_Fields_Form = React.createClass({
     if (this.state.ticket == null || this.state.show != true || !Modal) {
       return null;
     }
-    console.log(this.state);
     var that = this;
     var holder_key = "#" + this.state.dialog_holder_id;
     return React.createElement(Modal, {

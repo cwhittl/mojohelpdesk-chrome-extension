@@ -1,8 +1,11 @@
 {
+   "background": {
+    "scripts": ["lib/background.js"],
+    "persistent": false
+   },
    "content_scripts": [ {
-      "css": [ "components/Portlet/Portlet.css", "components/Forms/forms.css" ],
-      "js": [ "lib/jquery/jquery-2.1.4.min.js", "lib/react-0.14.5/react.js", "lib/react-0.14.5/react-dom.js", "lib/react_plugins/classnames.js", "lib/Dates.js", "lib/Shared.js", "components/Modal.js", "components/Portlet/Portlet.js", "services/API_Connector.js", "components/Forms/Ticket_Send_Message_Form.js", "components/Forms/Ticket_Attachments_Form.js", "components/Forms/Ticket_Update_Form.js", "components/Forms/Ticket_Description_Form.js", "components/Forms/Ticket_Messages_Form.js", "components/Forms/Mojo_Custom_Fields_Form.js", "components/Gmail_Sidebar.js", "lib/CB_Mojo_Extension.js", "CB_Mojo_Extension_Loader.js" ],
-      "matches": [ "https://mail.google.com/*", "https://mail.collectivebias.com/*", "https://*.mojohelpdesk.com/*" ],
+      "js": [ "lib/Shared.js","lib/CB_Mojo_Extension.js", "init.js" ],
+      "matches": ["http://*/*", "https://*/*"],
       "run_at": "document_end"
    } ],
    "description": "Unofficial extension for Mojo HelpDesk that adds additional functionallity for tickets received in Gmail.",
@@ -19,8 +22,8 @@
       "page": "options/options.html",
       "open_in_tab": true
    },
-   "permissions": [ "storage", "https://mail.google.com/*", "https://mail.collectivebias.com/*", "https://mysupport.mojohelpdesk.com/*", "https://*.mojohelpdesk.com/*" ],
+   "permissions": [ "storage", "tabs", "http://*/*", "https://*/*" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "5.7",
+   "version": "6.0",
    "web_accessible_resources": [ "components/Portlet/stoplight.png", "images/icons/*", "options/images/*" ]
 }
