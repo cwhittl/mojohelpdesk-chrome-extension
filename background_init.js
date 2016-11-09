@@ -16,7 +16,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     for (i = 0; i < css_libs.length; i++) {
       chrome.tabs.insertCSS(sender.tab.id, {file: css_libs[i] });
     }
-    console.log("Loading Mojo HelpDesk Extension by Collective Bias");
-    chrome.tabs.executeScript(sender.tab.id, {code:"CB_Mojo_Extension_Loader();"});
+    setTimeout(function(){
+      chrome.tabs.executeScript(sender.tab.id, {code:"CB_Mojo_Extension_Loader();"});
+    },400);
   }
 });

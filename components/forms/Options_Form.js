@@ -1,7 +1,7 @@
 var Options_Form = React.createClass({
   displayName: 'Options_Form',
   getInitialState: function() {
-    debug.info(this.props.cb_mojo_ext);
+    //debug.info(this.props.cb_mojo_ext);
     var custom_fields_json = this.props.cb_mojo_ext.custom_fields_json;
     if (Shared.isObject(this.props.cb_mojo_ext.custom_fields_json)) {
       custom_fields_json = JSON.stringify(this.props.cb_mojo_ext.custom_fields_json);
@@ -12,6 +12,7 @@ var Options_Form = React.createClass({
       api_key: this.props.cb_mojo_ext.api_key,
       debug_mode: this.props.cb_mojo_ext.debug_mode,
       mojo_domain: this.props.cb_mojo_ext.mojo_domain,
+      email_domain: this.props.cb_mojo_ext.email_domain,
       use_custom_fields: this.props.cb_mojo_ext.use_custom_fields,
       custom_fields_json: custom_fields_json,
       email_address: this.props.cb_mojo_ext.email_address,
@@ -44,6 +45,7 @@ var Options_Form = React.createClass({
         api_key: this.state.api_key,
         debug_mode: this.state.debug_mode,
         mojo_domain: this.state.mojo_domain,
+        email_domain: this.state.email_domain,
         use_custom_fields: this.state.use_custom_fields,
         custom_fields_json: JSON.parse(this.state.custom_fields_json),
         enforce_slas: this.state.enforce_slas,
@@ -72,7 +74,7 @@ var Options_Form = React.createClass({
     }, 7000);
   },
   onHelp: function(target) {
-    debug.info(target);
+    //debug.info(target);
     this.setState({
       help_text: target.help_text,
       help_image: target.help_image
@@ -101,7 +103,7 @@ var Options_Form = React.createClass({
     var input = R.input;
     var div = R.div;
     var img = R.img;
-    var domain_fieldset = Shared.createFieldSet({
+    var mojo_domain_fieldset = Shared.createFieldSet({
       label_text: "Please enter your Mojo Helpdesk domain (no http(s):// just the domain)",
       id: "mojo_domain",
       labelChild: Shared.createMoreInfo({
@@ -116,6 +118,23 @@ var Options_Form = React.createClass({
       type: "text",
       placeholder: "Please Enter Mojo Domain",
       value: this.state.mojo_domain,
+      onChange: this.handleInputChange
+    }));
+    var email_domain_fieldset = Shared.createFieldSet({
+      label_text: "Please enter your Email domain (no http(s):// just the domain)",
+      id: "email_domain",
+      labelChild: Shared.createMoreInfo({
+        help_image: "../../options/images/email_domain.png",
+        help_text: "This is the domain you use for email and can be found in the search bar of you your browser when you check your email.  Make sure you just put the domain and not the http:// or https://",
+        onHelp: this.onHelp
+      })
+    }, R.input({
+      className: "form-control",
+      id: "email_domain",
+      key: "email_domain",
+      type: "text",
+      placeholder: "Please Enter Email Domain",
+      value: this.state.email_domain,
       onChange: this.handleInputChange
     }));
     var email_fieldset = Shared.createFieldSet({
@@ -254,8 +273,9 @@ var Options_Form = React.createClass({
       key: "status",
       className: "Status"
     }, this.state.status));
-    controls.push(domain_fieldset);
+    controls.push(mojo_domain_fieldset);
     if (!Shared.isEmpty(this.state.mojo_domain) && Shared.isValidDomain(this.state.mojo_domain)) {
+      controls.push(email_domain_fieldset);
       controls.push(email_fieldset);
       controls.push(api_fieldset);
       controls.push(slas_fieldset);
@@ -304,8 +324,9 @@ var Options_Form = React.createClass({
     return this.render_content();
   }
 });
-new CB_Mojo_Extension(function(cb_mojo_ext) {
+new CB_Mojo_Extension(function(cb_mojo_ext){
   ReactDOM.render(React.createElement(Options_Form, {
-    cb_mojo_ext: cb_mojo_ext
-  }), document.querySelector('#container'));
+  cb_mojo_ext: cb_mojo_ext
+}), document.querySelector('#container'));
 });
+
