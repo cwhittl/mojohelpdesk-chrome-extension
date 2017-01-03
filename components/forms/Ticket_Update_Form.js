@@ -11,11 +11,12 @@ var Ticket_Update_Form = React.createClass({
     var potential_assignees = Shared.get_potential_assignees(ticket.potential_assignees);
     var due_on = ticket.due_on;
     var scheduled_on = ticket.scheduled_on;
-    
+
     if (this.props.cb_mojo_ext.enforce_slas == true && ((Shared.isEmpty(due_on) || Shared.isEmpty(scheduled_on)))) {
       if (Shared.isEmpty(due_on)) {
         due_on = Shared.get_due_on(ticket.created_on, ticket.priority_id, this.props.cb_mojo_ext);
-      }else if (Shared.isEmpty(scheduled_on)) {
+      }
+      if (Shared.isEmpty(scheduled_on)) {
         scheduled_on = Shared.get_scheduled_on(ticket.created_on, ticket.priority_id, this.props.cb_mojo_ext);
       }
     }else{
