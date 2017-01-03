@@ -24,6 +24,6 @@
    },
    "permissions": [ "storage", "tabs", "http://*/*", "https://*/*" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "6.0",
+   "version": "6.1",
    "web_accessible_resources": [ "components/Portlet/stoplight.png", "images/icons/*", "options/images/*" ]
 }
