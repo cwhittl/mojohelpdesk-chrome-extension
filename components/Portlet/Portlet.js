@@ -88,9 +88,6 @@ var Portlet = React.createClass({
         }
     },
     handleMinimize: function(e) {
-        /*this.setState({
-            minimized: (this.state.minimized) ? false : true
-        });*/
         if (this.props.handleMinimize) {
             this.props.handleMinimize(e,this.props.id);
         }
