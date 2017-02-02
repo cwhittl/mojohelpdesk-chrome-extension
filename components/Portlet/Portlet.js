@@ -49,7 +49,9 @@ var Portlet = React.createClass({
     },
     handleMaximize: function(e) {
         this.setState({
-            maximized: (this.state.maximized) ? false : true
+            maximized: (this.state.maximized)
+                ? false
+                : true
         });
         var that = this;
         if (Modal) {
@@ -82,7 +84,7 @@ var Portlet = React.createClass({
             console.log("Modal not included");
         }
         if (this.props.handleMaximize) {
-            this.props.handleMaximize(e);
+            this.props.handleMaximize(e,this.props.id);
         }
     },
     handleMinimize: function(e) {
@@ -90,12 +92,14 @@ var Portlet = React.createClass({
             minimized: (this.state.minimized) ? false : true
         });*/
         if (this.props.handleMinimize) {
-            this.props.handleMinimize(e);
+            this.props.handleMinimize(e,this.props.id);
         }
     },
     handleClose: function(e) {
         this.setState({
-            closed: (this.state.closed) ? false : true
+            closed: (this.state.closed)
+                ? false
+                : true
         });
         if (this.props.handleClose) {
             this.props.handleClose(e);
@@ -138,9 +142,7 @@ var Portlet = React.createClass({
         }, controls);
     },
     render_titlebar: function() {
-        var titlebar_classes = classNames('titlebar', {
-            'mac-ver': this.props.is_mac
-        });
+        var titlebar_classes = classNames('titlebar', {'mac-ver': this.props.is_mac});
         return React.createElement("div", {
             className: titlebar_classes,
             key: this.getID() + "-titlebar"
@@ -148,7 +150,7 @@ var Portlet = React.createClass({
             className: "titlebar-title",
             key: this.getID() + "-titlebar-title",
             onDoubleClick: this.handleNop,
-            onClick: this.handleMinimize,
+            onClick: this.handleMinimize
         }, this.props.title), this.render_controls());
     },
     getID: function() {

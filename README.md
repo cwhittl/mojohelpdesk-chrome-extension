@@ -8,6 +8,3 @@ Still TODO
 
 Gmail
 Issue with states and Portlet being Maximized... Currently you can't edit a form in a maximized portlet.
-
-All
-Testing

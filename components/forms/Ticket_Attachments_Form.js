@@ -69,15 +69,12 @@ var Ticket_Attachments_Form = React.createClass({
     if (this.props.ticket == null) {
       return null;
     }
-    /*if (!this.props.ticket.hasOwnProperty("attachments") && this.props.ticket.attachments.length == 0) {
-      return null;
-    }*/
     var R = React.DOM;
     return React.createElement(Portlet, {
       key: "ticket_attachments_form",
       id: "ticket_attachments_form",
       disable_close: true,
-      disable_maximize: true,
+      disable_maximize: false,
       title: "Attachments (" + this.props.ticket.attachments.length + ")",
       draggable: false,
       minimized: this.props.minimized,

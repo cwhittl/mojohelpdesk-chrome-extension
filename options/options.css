@@ -1,101 +1,118 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,800,800italic);
 ::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 10px;
+    -webkit-appearance: none;
+    width: 10px;
 }
-::-webkit-scrollbar-thumb {
-  border-radius: 6px;
-  background-color: rgba(0, 0, 0, .5);
-  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-}
-body {
-  font-family: 'Open Sans', sans-serif;
-  padding-top: 0px !important;
-}
-hr {
-  clear: both;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.optionsContainer {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 500px;
-}
-.optionsForm {
-  overflow-y: scroll;
-  width: 100%;
-  height: 500px;
-}
-.main-container {
-  margin: 10px;
-}
-.option_status {
-  height: 25px;
-  line-height: 25px;
-  width: 100%;
-  display: block;
-  float: left;
-  text-align: center;
-  color: green;
-  font-size: 18px;
-}
-.controls {
-  float: left;
-  width: 60%;
 
+::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 0px !important;
+}
+
+hr {
+    clear: both;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.optionsContainer {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 500px;
+}
+
+.optionsForm {
+    overflow-y: scroll;
+    width: 100%;
+    height: 500px;
+}
+
+.main-container {
+    margin: 10px;
+}
+
+.option_status {
+    height: 25px;
+    line-height: 25px;
+    width: 100%;
+    display: block;
+    float: left;
+    text-align: center;
+    color: green;
+    font-size: 18px;
+}
+
+.controls {
+    float: left;
+    width: 60%;
+}
+
 .help_area {
-  position: fixed;
-  right:20px;
-  width: 35%;
+    position: fixed;
+    right: 20px;
+    width: 35%;
 }
+
 .help_area img {
-  width: 100%;
+    width: 100%;
 }
+
 .options_header {
-  float: left;
-  font-size: 20px;
-  line-height: 75px;
-  font-weight: bold;
+    float: left;
+    font-size: 20px;
+    line-height: 75px;
+    font-weight: bold;
 }
+
 .options_logo {
-  float: right;
-  height: 75px;
-  width: 75px;
+    float: right;
+    height: 75px;
+    width: 75px;
 }
+
 .more_info {
-  height: 10px;
-  width: 10px;
-  margin-left: 5px;
+    height: 10px;
+    width: 10px;
+    margin-left: 5px;
 }
+
 .help_text {
-  width: 100%;
-  max-height: 200px;
+    width: 100%;
+    max-height: 200px;
 }
+
 .help_image {
-  height: 350px;
-  width: 100%;
-  display: block;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+    height: 350px;
+    width: 100%;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
+
 input[type="checkbox"] {
-  float: left;
-  width: 20px;
-  height: 20px;
-  margin-left: 20px;
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-left: 20px;
 }
+
 input[type="submit"] {
-  margin-bottom: 30px;
-  margin-top: 30px;
-  margin-left: 40px;
-  background-color: #D2E6AC;
-  color:black;
-  width: 90%;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    margin-left: 40px;
+    background-color: #D2E6AC;
+    color: black;
+    width: 90%;
 }
+
 #group-enforce_slas label, #group-use_custom_fields label, #group-debug_mode label, #group-reset_options label {
-  float: left;
+    float: left;
 }
