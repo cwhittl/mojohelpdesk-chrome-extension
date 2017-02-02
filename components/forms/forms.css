@@ -186,6 +186,10 @@ input.update_ticket {
     background-repeat: no-repeat;
 }
 
+.message {
+    float: left;
+}
+
 .user_info, .time_info {
     float: left;
     display: block;

@@ -26,6 +26,7 @@ var Ticket_Messages_Form = React.createClass({
                     className: classes,
                     key: x
                 }, Shared.create_user_info(comment), R.span({
+                    className:"message",
                     dangerouslySetInnerHTML: {
                         __html: Shared.linkify(Shared.clean_message_body(comment.body, mojo_domain))
                     }
