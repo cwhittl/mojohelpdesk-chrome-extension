@@ -8,7 +8,9 @@ Developer Dashboard is at https://chrome.google.com/webstore/developer/dashboard
 
 You must be a member of https://groups.google.com/forum/#!forum/collectivebias_devs to edit the plugin
 
+Public version of plugin is hosted at https://github.com/collectivebias/mojohelpdesk-chrome-extension
+
 Still TODO
 
-Gmail
-Issue with states and Portlet being Maximized... Currently you can't edit a form in a maximized portlet.
+Gmail SideBar
+  Issue with states and Portlet being Maximized... Currently you can't edit a form in a maximized portlet.
